@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { addDays, format, isAfter, isBefore, startOfDay } from "date-fns";
 import { Layout } from "@/components/layout/Layout";
 import {
@@ -33,9 +33,13 @@ const slotLabels: Record<SlotType, string> = {
   FULL: "Full",
 };
 
+const DEFAULT_ADMIN_USERNAME = "admin";
+const DEFAULT_ADMIN_PASSWORD = "1234";
+const DEFAULT_ADMIN_EMAIL = "admin@captainmikes.local";
+
 export default function Admin() {
   const { loading, session } = useAdminAuth();
-  const [email, setEmail] = useState("");
+  const [usernameOrEmail, setUsernameOrEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
@@ -46,9 +50,35 @@ export default function Admin() {
   const updateStatus = useUpdateBookingStatus();
   const deleteBooking = useDeleteBooking();
 
+  useEffect(() => {
+    const ensureDefaultAdmin = async () => {
+      const { error: signUpError } = await supabase.auth.signUp({
+        email: DEFAULT_ADMIN_EMAIL,
+        password: DEFAULT_ADMIN_PASSWORD,
+      });
+
+      // Ignore if user already exists or if email confirmation is required.
+      if (
+        signUpError &&
+        !signUpError.message.toLowerCase().includes("already") &&
+        !signUpError.message.toLowerCase().includes("confirm")
+      ) {
+        console.warn("default admin bootstrap failed", signUpError.message);
+      }
+    };
+
+    void ensureDefaultAdmin();
+  }, []);
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    const normalizedLogin = usernameOrEmail.trim();
+    const email =
+      normalizedLogin.toLowerCase() === DEFAULT_ADMIN_USERNAME
+        ? DEFAULT_ADMIN_EMAIL
+        : normalizedLogin;
+
     const { error: authError } = await supabase.auth.signInWithPassword({
       email,
       password,
@@ -163,10 +193,10 @@ export default function Admin() {
             <form onSubmit={handleLogin} className="space-y-4">
               <div>
                 <Input
-                  type="email"
-                  placeholder="Email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  type="text"
+                  placeholder="Username or email"
+                  value={usernameOrEmail}
+                  onChange={(e) => setUsernameOrEmail(e.target.value)}
                 />
               </div>
               <div className="relative">
@@ -185,6 +215,9 @@ export default function Admin() {
                 </button>
               </div>
               {error && <p className="text-sm text-destructive">{error}</p>}
+              <p className="text-xs text-muted-foreground">
+                Default login: {DEFAULT_ADMIN_USERNAME} / {DEFAULT_ADMIN_PASSWORD}
+              </p>
               <Button type="submit" className="w-full">
                 Sign in
               </Button>
