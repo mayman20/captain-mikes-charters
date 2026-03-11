@@ -64,11 +64,11 @@ export default function Booking() {
         <div className="text-center mb-8">
           <div className="inline-flex items-center gap-2 text-primary mb-2">
             <Fish className="h-6 w-6" />
-            <span className="text-sm font-medium uppercase tracking-wider">Saltwater Fishing</span>
+            <span className="text-sm font-medium uppercase tracking-wider">PushingLimits SportFishing</span>
           </div>
           <h1 className="text-3xl md:text-4xl font-bold mb-2">Book Your Trip</h1>
           <p className="text-muted-foreground max-w-md mx-auto">
-            Affordable inshore and nearshore charters. Pick a date, choose your trip, and let's go fishing!
+            Pick your date, choose a half-day or full-day charter, and the captain will confirm the exact departure time.
           </p>
         </div>
 
@@ -82,7 +82,7 @@ export default function Booking() {
             </div>
             {selectedDate && selectedSlot && (
               <span className="font-semibold">
-                {selectedSlot === "FULL" ? "$600" : "$350"}
+                {selectedSlot === "FULL" ? "$1200" : "$650"}
               </span>
             )}
           </div>

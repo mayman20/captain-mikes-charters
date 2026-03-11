@@ -35,6 +35,30 @@ export type Database = {
         }
         Relationships: []
       }
+      blocked_slots: {
+        Row: {
+          created_at: string
+          date: string
+          id: string
+          reason: string | null
+          slot_type: Database["public"]["Enums"]["slot_type"]
+        }
+        Insert: {
+          created_at?: string
+          date: string
+          id?: string
+          reason?: string | null
+          slot_type: Database["public"]["Enums"]["slot_type"]
+        }
+        Update: {
+          created_at?: string
+          date?: string
+          id?: string
+          reason?: string | null
+          slot_type?: Database["public"]["Enums"]["slot_type"]
+        }
+        Relationships: []
+      }
       bookings: {
         Row: {
           created_at: string

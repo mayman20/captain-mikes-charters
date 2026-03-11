@@ -1,4 +1,4 @@
-import { Anchor, Phone, Mail } from "lucide-react";
+import { Anchor, Phone } from "lucide-react";
 import { Link } from "react-router-dom";
 
 export function Footer() {
@@ -8,17 +8,13 @@ export function Footer() {
         <div className="flex flex-col md:flex-row justify-between items-start gap-6">
           <div className="flex items-center gap-2">
             <Anchor className="h-6 w-6" />
-            <span className="font-bold">Captain Mike's Charters</span>
+            <span className="font-bold">PushingLimits SportFishing</span>
           </div>
 
           <div className="flex flex-col gap-2 text-sm text-primary-foreground/90">
-            <a href="tel:+15551234567" className="flex items-center gap-2 hover:text-primary-foreground">
+            <a href="tel:+14013638189" className="flex items-center gap-2 hover:text-primary-foreground">
               <Phone className="h-4 w-4" />
-              (555) 123-4567
-            </a>
-            <a href="mailto:book@gulfrunner.com" className="flex items-center gap-2 hover:text-primary-foreground">
-              <Mail className="h-4 w-4" />
-              book@gulfrunner.com
+              (401) 363-8189
             </a>
           </div>
 
@@ -29,7 +25,7 @@ export function Footer() {
         </div>
 
         <div className="border-t border-primary-foreground/20 mt-6 pt-6 text-center text-xs text-primary-foreground/70">
-          © {new Date().getFullYear()} Captain Mike's Charters. All rights reserved.
+          © {new Date().getFullYear()} PushingLimits SportFishing. All rights reserved.
         </div>
         <div className="mt-2 text-center">
           <Link
