@@ -1,93 +1,152 @@
-# Welcome to your Lovable project
+# Captain Mike's Charters Website
 
-## Project info
+Booking website for Captain Mike's Charters with a public booking flow and an owner-only admin dashboard.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+## Stack
 
-## How can I edit this code?
+### Frontend
+- Vite 6
+- React 18 + TypeScript
+- React Router
+- Tailwind CSS + shadcn/ui
+- TanStack Query
 
-There are several ways of editing your application.
+### Backend
+- Supabase Postgres (bookings, blocked availability)
+- Supabase Auth (admin login)
+- Supabase Row Level Security policies
+- Supabase Edge Function (`send-booking-email`) for confirmation emails
 
-**Use Lovable**
+## Core Features
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+- Public booking page with date and slot selection (`AM`, `PM`, `FULL`)
+- Availability enforcement to prevent double-booking
+- Admin dashboard to:
+  - view all bookings
+  - cancel/restore/delete bookings
+  - block calendar slots
+  - export bookings to CSV
+- Automatic email notifications to customer and owner after booking
 
-Changes made via Lovable will be committed automatically to this repo.
+## Architecture
 
-**Use your preferred IDE**
+1. Customer submits booking from frontend.
+2. Frontend inserts booking into `public.bookings` via Supabase client.
+3. DB constraints, trigger, and RLS validate availability and permissions.
+4. Frontend invokes Supabase Edge Function `send-booking-email`.
+5. Edge Function sends emails through Gmail API OAuth credentials.
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+## Project Structure
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+```txt
+src/
+  pages/                # Route pages (Index, Book, Info, Admin)
+  components/           # UI and feature components
+  hooks/                # Booking/auth data hooks
+  integrations/supabase # Generated types + Supabase client
+supabase/
+  migrations/           # Schema, RLS, policies, triggers
+  functions/
+    send-booking-email/ # Edge Function for email notifications
+```
 
-Follow these steps:
+## Environment Variables
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+### Frontend (`.env`)
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+Required for local app runtime:
 
-# Step 3: Install the necessary dependencies.
-npm i
+- `VITE_SUPABASE_URL`
+- `VITE_SUPABASE_PUBLISHABLE_KEY`
+- `VITE_SUPABASE_PROJECT_ID`
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+### Edge Function Secrets (Supabase project secrets)
+
+Required by `supabase/functions/send-booking-email/index.ts`:
+
+- `GMAIL_CLIENT_ID`
+- `GMAIL_CLIENT_SECRET`
+- `GMAIL_REFRESH_TOKEN`
+- `GMAIL_USER`
+- `OWNER_EMAIL`
+
+Set these with Supabase CLI or Dashboard secrets management.
+
+## Local Development
+
+### Prerequisites
+
+- Node.js 20+
+- npm
+- Supabase project access
+- Optional: Supabase CLI
+
+### Start app
+
+```bash
+npm install
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+Other scripts:
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+```bash
+npm run build
+npm run preview
+npm run lint
+npm test
+```
 
-**Use GitHub Codespaces**
+## Supabase Operations
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+Apply latest database changes:
 
-## What technologies are used for this project?
+```bash
+supabase db push
+```
 
-This project is built with:
+Deploy email Edge Function:
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+```bash
+supabase functions deploy send-booking-email
+```
 
-## How can I deploy this project?
+Set Edge Function secrets:
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+```bash
+supabase secrets set GMAIL_CLIENT_ID=... GMAIL_CLIENT_SECRET=... GMAIL_REFRESH_TOKEN=... GMAIL_USER=... OWNER_EMAIL=...
+```
 
-## Can I connect a custom domain to my Lovable project?
+## Deployment Notes
 
-Yes, you can!
+- Frontend can be deployed to any static host (Vercel, Netlify, Cloudflare Pages, etc).
+- Supabase remains the backend service (database/auth/functions).
+- Ensure frontend env vars point to the same Supabase project as deployed migrations/functions.
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+## Troubleshooting
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+- `Supabase appears down after inactivity`: on Free plan, inactive projects can auto-pause. Resume from Supabase dashboard and wait for warm-up.
+- `Bookings insert fails`: check RLS/policies and trigger constraints in `supabase/migrations`.
+- `No emails sent`: verify function deployed, secrets set, and Gmail OAuth refresh token still valid.
 
-## Future plans
+## Email Reliability Note
 
-- [x] Add secure admin login with Supabase Auth (no hardcoded passwords).
-- [x] Add owner-only calendar page to view active bookings and manage availability.
-- [x] Add automated booking confirmation notifications (email).
-- [ ] Add notification controls (email/SMS toggles).
-- [ ] Add SMS notifications via a provider (e.g., Twilio) with message like:
-  "Captain Mike's Charters - Booking Confirmed" + date/time/duration.
-- [ ] Add a customer booking page where users can view, reschedule, and cancel their booking.
+- Current setup uses Gmail API OAuth from Supabase Edge Function `send-booking-email`.
+- If customer/owner confirmations stop, first check function logs for `401` gateway errors or Gmail `invalid_grant`.
+- Keep `[functions.send-booking-email] verify_jwt = false` in `supabase/config.toml` and redeploy after function/config changes.
+- Run periodic booking tests to verify confirmations are still sending.
+- If email reliability degrades again, pivot to a transactional provider (Resend/SendGrid/Postmark) as the long-term fallback.
 
-## Things to confirm with the owner
-- Cancellation policy window (e.g., allowed up to 24 hours before trip? refunds?).
-- Are current prices correct?
-- Are current trip times correct?
-- Should AM and PM both be offered every day?
-- If someone books AM or PM, do you still take another charter the same day?
-- What else should be included in Trip Info (meeting time, exact location, what to bring)?
-- Should card payments be added?
-- Should there be options to target different fish species?
+## Documentation Workflow
+
+- Owner requirement tracking lives in `OWNER_FEEDBACK.md`.
+- Keep `Phase 1` items aligned with launch-critical booking behavior.
+- Move non-critical enhancements to `Phase 2` until launch baseline is stable.
+
+## Owner Account Questions (Access + Login)
+
+- Ask owner for the final notification email address to store as Supabase secret `OWNER_EMAIL` (used for booking alert emails).
+- Confirm owner wants booking alerts sent to that same email long-term, or to a different business email.
+- Ask owner what admin login credentials they want for website admin access.
+- If using SQL-based admin records, add/update owner credentials in Supabase `admin_users` table.
+- If continuing with Supabase Auth login flow, create/update owner user in Supabase Auth and share final login details with owner.
