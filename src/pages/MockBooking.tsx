@@ -70,11 +70,11 @@ export default function MockBooking() {
 
   return (
     <Layout>
-      <div className="bg-slate-950 text-white">
-        <section className="border-b border-white/10">
+      <div className="bg-stone-50 text-slate-950">
+        <section className="border-b border-stone-200 bg-[linear-gradient(180deg,#fffaf4_0%,#eef6fb_100%)]">
           <div className="container grid gap-6 py-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
             <div className="space-y-5">
-              <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-2 text-sm uppercase tracking-[0.25em] text-cyan-300">
+              <div className="inline-flex items-center gap-2 rounded-full border border-sky-200 bg-white px-4 py-2 text-sm uppercase tracking-[0.25em] text-sky-700 shadow-sm">
                 <Fish className="h-4 w-4" />
                 Mock Booking Version
               </div>
@@ -83,14 +83,14 @@ export default function MockBooking() {
                 <br />
                 Let the photos carry the page.
               </h1>
-              <p className="max-w-2xl text-slate-300">
+              <p className="max-w-2xl text-slate-700">
                 This keeps the calendar and booking flow you already like, but wraps it in a more photo-forward layout closer to the reference site.
               </p>
-              <div className="flex flex-wrap items-center gap-3 text-sm text-slate-300">
+              <div className="flex flex-wrap items-center gap-3 text-sm text-slate-600">
                 <span>$650 Half Day</span>
-                <span className="text-white/30">/</span>
+                <span className="text-slate-300">/</span>
                 <span>$1200 Full Day</span>
-                <span className="text-white/30">/</span>
+                <span className="text-slate-300">/</span>
                 <span>Phone-only tuna and shark trips</span>
               </div>
               <div className="flex flex-col gap-3 sm:flex-row">
@@ -101,7 +101,7 @@ export default function MockBooking() {
                   </Button>
                 </a>
                 <Link to="/mock-home">
-                  <Button size="lg" variant="outline" className="border-white/20 bg-transparent text-white hover:bg-white hover:text-slate-950">
+                  <Button size="lg" variant="outline" className="border-slate-300 bg-white text-slate-950 hover:bg-slate-950 hover:text-white">
                     Back to Mock Home
                   </Button>
                 </Link>
@@ -110,7 +110,7 @@ export default function MockBooking() {
 
             <div className="grid gap-4 sm:grid-cols-2">
               {bookingImages.map((src, index) => (
-                <div key={src} className={`overflow-hidden rounded-[2rem] border border-white/10 ${index === 0 ? "sm:mt-10" : ""}`}>
+                <div key={src} className={`overflow-hidden rounded-[2rem] border border-stone-200 bg-white shadow-sm ${index === 0 ? "sm:mt-10" : ""}`}>
                   <img src={src} alt={`Charter photo ${index + 1}`} className="h-72 w-full object-cover" />
                 </div>
               ))}
@@ -120,7 +120,7 @@ export default function MockBooking() {
 
         <section className="container py-8">
           {(selectedDate || selectedSlot) && (
-            <div className="mb-6 rounded-2xl border border-cyan-400/20 bg-cyan-400/10 p-4 text-sm text-cyan-50">
+            <div className="mb-6 rounded-2xl border border-sky-200 bg-sky-50 p-4 text-sm text-slate-800 shadow-sm">
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div>
                   {selectedDate && <span>{format(selectedDate, "EEEE, MMM d")}</span>}
@@ -139,10 +139,12 @@ export default function MockBooking() {
           )}
 
           <div className="grid gap-6 xl:grid-cols-[0.9fr_0.9fr_1.2fr]">
-            <div className="rounded-[2rem] border border-white/10 bg-white/5 p-1">
-              <BookingCalendar selectedDate={selectedDate} onSelectDate={handleDateSelect} />
+            <div className="rounded-[2rem] border border-sky-100 bg-white p-3 shadow-sm">
+              <div className="[&_button]:h-11 [&_button]:w-11 [&_.rdp-caption_label]:text-base [&_.rdp-day]:text-base [&_.rdp-head_cell]:text-sm">
+                <BookingCalendar selectedDate={selectedDate} onSelectDate={handleDateSelect} />
+              </div>
             </div>
-            <div className="rounded-[2rem] border border-white/10 bg-white/5 p-1">
+            <div className="rounded-[2rem] border border-stone-200 bg-white p-3 shadow-sm">
               <SlotSelector
                 selectedDate={selectedDate}
                 selectedSlot={selectedSlot}
@@ -150,14 +152,14 @@ export default function MockBooking() {
               />
             </div>
             <div className="space-y-6">
-              <div className="overflow-hidden rounded-[2rem] border border-white/10">
+              <div className="overflow-hidden rounded-[2rem] border border-stone-200 bg-white shadow-sm">
                 <img
                   src="https://images.unsplash.com/photo-1515238152791-8216bfdf89a7?auto=format&fit=crop&w=1400&q=80"
                   alt="Sportfishing action"
                   className="h-56 w-full object-cover"
                 />
               </div>
-              <div className="rounded-[2rem] border border-white/10 bg-white/5 p-1">
+              <div className="rounded-[2rem] border border-stone-200 bg-white p-3 shadow-sm">
                 <BookingForm
                   selectedDate={selectedDate}
                   selectedSlot={selectedSlot}
