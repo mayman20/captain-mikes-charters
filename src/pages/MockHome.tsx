@@ -55,7 +55,7 @@ const mockTrips = [
 export default function MockHome() {
   return (
     <Layout>
-      <div className="bg-slate-950 text-white">
+      <div className="bg-stone-50 text-slate-950">
         <section className="relative isolate overflow-hidden">
           <div className="absolute inset-0 grid grid-cols-1 md:grid-cols-3">
             {heroImages.map((src, index) => (
@@ -65,15 +65,15 @@ export default function MockHome() {
                   alt={index === 0 ? "Open water at sunrise" : index === 1 ? "Sport fishing action" : "Offshore ocean scene"}
                   className="h-full w-full object-cover"
                 />
-                <div className="absolute inset-0 bg-slate-950/45" />
+                <div className="absolute inset-0 bg-stone-950/25" />
               </div>
             ))}
           </div>
-          <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/75 to-slate-950/35" />
+          <div className="absolute inset-0 bg-gradient-to-r from-stone-50/95 via-stone-50/78 to-stone-50/18" />
 
           <div className="container relative py-20 md:py-32">
             <div className="max-w-2xl space-y-6">
-              <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm uppercase tracking-[0.25em] text-slate-100">
+              <div className="inline-flex items-center gap-2 rounded-full border border-sky-200 bg-white/80 px-4 py-2 text-sm uppercase tracking-[0.25em] text-sky-800 shadow-sm">
                 <Anchor className="h-4 w-4" />
                 PushingLimits SportFishing
               </div>
@@ -84,7 +84,7 @@ export default function MockHome() {
                 <br />
                 Real Fish.
               </h1>
-              <p className="max-w-xl text-base text-slate-200 md:text-lg">
+              <p className="max-w-xl text-base text-slate-700 md:text-lg">
                 This is a mock image-led homepage direction inspired by the photo-first charter sites you like. It keeps your current booking system, but shifts the public side toward a stronger visual sales page.
               </p>
               <div className="flex flex-col gap-3 sm:flex-row">
@@ -97,7 +97,7 @@ export default function MockHome() {
                   <Button
                     size="lg"
                     variant="outline"
-                    className="w-full border-white/30 bg-transparent text-white hover:bg-white hover:text-slate-950 sm:w-auto"
+                    className="w-full border-slate-300 bg-white/85 text-slate-950 hover:bg-slate-950 hover:text-white sm:w-auto"
                   >
                     Call (401) 363-8189
                   </Button>
@@ -107,51 +107,51 @@ export default function MockHome() {
           </div>
         </section>
 
-        <section className="border-y border-white/10 bg-slate-900">
+        <section className="border-y border-stone-200 bg-white">
           <div className="container grid gap-6 py-8 md:grid-cols-3">
             <div className="flex items-center gap-3">
-              <Fish className="h-5 w-5 text-cyan-300" />
+              <Fish className="h-5 w-5 text-sky-700" />
               <div>
                 <div className="font-semibold">4-Hour Half Days</div>
-                <div className="text-sm text-slate-300">Morning or afternoon</div>
+                <div className="text-sm text-slate-600">Morning or afternoon</div>
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <BadgeDollarSign className="h-5 w-5 text-cyan-300" />
+              <BadgeDollarSign className="h-5 w-5 text-sky-700" />
               <div>
                 <div className="font-semibold">$650 Half Day / $1200 Full Day</div>
-                <div className="text-sm text-slate-300">20% tip is standard</div>
+                <div className="text-sm text-slate-600">20% tip is standard</div>
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <Waves className="h-5 w-5 text-cyan-300" />
+              <Waves className="h-5 w-5 text-sky-700" />
               <div>
                 <div className="font-semibold">Jerusalem, Rhode Island</div>
-                <div className="text-sm text-slate-300">Final meeting details by phone</div>
+                <div className="text-sm text-slate-600">Final meeting details by phone</div>
               </div>
             </div>
           </div>
         </section>
 
-        <section className="bg-[linear-gradient(180deg,#020617_0%,#0f172a_100%)] py-16 md:py-24">
+        <section className="bg-[linear-gradient(180deg,#fffaf4_0%,#f7efe3_100%)] py-16 md:py-24">
           <div className="container grid gap-12 lg:grid-cols-[1.1fr_0.9fr]">
             <div className="space-y-6">
-              <p className="text-sm font-semibold uppercase tracking-[0.3em] text-cyan-300">
+              <p className="text-sm font-semibold uppercase tracking-[0.3em] text-sky-700">
                 Mock Direction
               </p>
               <h2 className="text-3xl font-bold uppercase md:text-5xl">
                 The homepage can sell the experience before it asks for the booking.
               </h2>
-              <p className="max-w-2xl text-slate-300">
+              <p className="max-w-2xl text-slate-700">
                 The main difference from your current site is emphasis. Instead of leading with mostly text, this version leads with strong fish, boat, water, and captain imagery, then supports it with tighter copy blocks and direct calls to action.
               </p>
               <div className="grid gap-4 md:grid-cols-3">
                 {highlights.map((item) => (
-                  <div key={item.title} className="rounded-3xl border border-white/10 bg-white/5 p-5 backdrop-blur">
-                    <div className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-cyan-300">
+                  <div key={item.title} className="rounded-3xl border border-stone-200 bg-white p-5 shadow-sm">
+                    <div className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-sky-700">
                       {item.title}
                     </div>
-                    <p className="text-sm text-slate-300">{item.text}</p>
+                    <p className="text-sm text-slate-600">{item.text}</p>
                   </div>
                 ))}
               </div>
@@ -161,7 +161,7 @@ export default function MockHome() {
               {catchImages.map((src, index) => (
                 <div
                   key={src}
-                  className={`overflow-hidden rounded-3xl border border-white/10 ${index === 0 ? "sm:col-span-2" : ""}`}
+                  className={`overflow-hidden rounded-3xl border border-stone-200 bg-white shadow-sm ${index === 0 ? "sm:col-span-2" : ""}`}
                 >
                   <img
                     src={src}
@@ -211,14 +211,14 @@ export default function MockHome() {
           </div>
         </section>
 
-        <section className="bg-slate-950 py-16 md:py-24">
+        <section className="bg-[#eef6fb] py-16 md:py-24">
           <div className="container grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
-            <div className="rounded-[2rem] border border-white/10 bg-white/5 p-8">
-              <div className="mb-4 flex items-center gap-2 text-cyan-300">
+            <div className="rounded-[2rem] border border-sky-100 bg-white p-8 shadow-sm">
+              <div className="mb-4 flex items-center gap-2 text-sky-700">
                 <Star className="h-5 w-5" />
                 <span className="text-sm font-semibold uppercase tracking-[0.25em]">Why This Direction Works</span>
               </div>
-              <div className="space-y-4 text-sm text-slate-300">
+              <div className="space-y-4 text-sm text-slate-600">
                 <p>It feels more like a fishing charter brand and less like a utility booking form.</p>
                 <p>It gives you room to feature client catches, the boat, Captain Mike, and species-specific visuals.</p>
                 <p>It still supports your current booking workflow instead of forcing a full rebuild.</p>
@@ -228,7 +228,7 @@ export default function MockHome() {
               <h2 className="text-3xl font-bold uppercase md:text-5xl">
                 If this is the right direction, the next step is real photo assets.
               </h2>
-              <p className="max-w-2xl text-slate-300">
+              <p className="max-w-2xl text-slate-700">
                 This mock uses stock photography as stand-ins. To make it believable, we would swap in real catch photos, boat photos, captain photos, and dock shots from your client.
               </p>
               <div className="flex flex-col gap-3 sm:flex-row">
@@ -239,7 +239,7 @@ export default function MockHome() {
                   </Button>
                 </Link>
                 <a href="tel:+14013638189" className="inline-flex">
-                  <Button size="lg" variant="outline" className="border-white/20 bg-transparent text-white hover:bg-white hover:text-slate-950">
+                  <Button size="lg" variant="outline" className="border-slate-300 bg-white text-slate-950 hover:bg-slate-950 hover:text-white">
                     <Phone className="mr-2 h-4 w-4" />
                     Call the Captain
                   </Button>

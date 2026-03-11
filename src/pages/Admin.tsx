@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { addDays, format, isAfter, isBefore, startOfDay } from "date-fns";
 import { Layout } from "@/components/layout/Layout";
 import {
@@ -6,6 +6,8 @@ import {
   useUpdateBookingStatus,
   useDeleteBooking,
   useBlockedSlots,
+  useCreateBlockedSlot,
+  useDeleteBlockedSlot,
   Booking,
   SlotType,
 } from "@/hooks/useBookings";
@@ -24,8 +26,9 @@ import { Download, Loader2, Eye, EyeOff, Lock, LogOut } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
 import { useAdminAuth } from "@/hooks/useAdminAuth";
-import { BlockedSlotManager } from "@/components/admin/BlockedSlotManager";
 import { Calendar } from "@/components/ui/calendar";
+import { useToast } from "@/hooks/use-toast";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
 const slotLabels: Record<SlotType, string> = {
   AM: "AM",
@@ -33,57 +36,37 @@ const slotLabels: Record<SlotType, string> = {
   FULL: "Full",
 };
 
-const DEFAULT_ADMIN_USERNAME = "admin";
-const DEFAULT_ADMIN_PASSWORD = "1234";
-const DEFAULT_ADMIN_EMAIL = "admin@captainmikes.local";
-
 export default function Admin() {
   const { loading, session } = useAdminAuth();
-  const [usernameOrEmail, setUsernameOrEmail] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [selectedDate, setSelectedDate] = useState<Date | undefined>();
+  const [blockSlot, setBlockSlot] = useState<SlotType>("AM");
+  const [blockReason, setBlockReason] = useState("");
 
   const { data: bookings, isLoading } = useAllBookings();
   const { data: blockedSlots } = useBlockedSlots();
   const updateStatus = useUpdateBookingStatus();
   const deleteBooking = useDeleteBooking();
-
-  useEffect(() => {
-    const ensureDefaultAdmin = async () => {
-      const { error: signUpError } = await supabase.auth.signUp({
-        email: DEFAULT_ADMIN_EMAIL,
-        password: DEFAULT_ADMIN_PASSWORD,
-      });
-
-      // Ignore if user already exists or if email confirmation is required.
-      if (
-        signUpError &&
-        !signUpError.message.toLowerCase().includes("already") &&
-        !signUpError.message.toLowerCase().includes("confirm")
-      ) {
-        console.warn("default admin bootstrap failed", signUpError.message);
-      }
-    };
-
-    void ensureDefaultAdmin();
-  }, []);
+  const createBlockedSlot = useCreateBlockedSlot();
+  const deleteBlockedSlot = useDeleteBlockedSlot();
+  const { toast } = useToast();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-    const normalizedLogin = usernameOrEmail.trim();
-    const email =
-      normalizedLogin.toLowerCase() === DEFAULT_ADMIN_USERNAME
-        ? DEFAULT_ADMIN_EMAIL
-        : normalizedLogin;
 
     const { error: authError } = await supabase.auth.signInWithPassword({
-      email,
+      email: email.trim(),
       password,
     });
     if (authError) {
+      if (authError.message.toLowerCase().includes("email not confirmed")) {
+        setError("This admin user exists, but the email is not confirmed in Supabase Auth yet.");
+        return;
+      }
       setError(authError.message);
     }
   };
@@ -97,6 +80,11 @@ export default function Admin() {
     if (!selectedDateStr || !bookings) return [];
     return bookings.filter((b) => b.date === selectedDateStr);
   }, [bookings, selectedDateStr]);
+
+  const blockedForDate = useMemo(() => {
+    if (!selectedDateStr || !blockedSlots) return [];
+    return blockedSlots.filter((b) => b.date === selectedDateStr);
+  }, [blockedSlots, selectedDateStr]);
 
   const getDateStatus = (date: Date) => {
     if (!bookings) {
@@ -143,6 +131,69 @@ export default function Admin() {
     if (window.confirm(`Delete booking for ${booking.name} on ${format(new Date(booking.date), "MMM d")}?`)) {
       await deleteBooking.mutateAsync({ id: booking.id });
     }
+  };
+
+  const handleBlockSelectedSlot = async () => {
+    if (!selectedDateStr) {
+      toast({
+        title: "Select a date first",
+        description: "Pick a date on the booking calendar before blocking availability.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const confirmedBookings = bookingsForDate.filter((booking) => booking.status === "confirmed");
+    const hasFullBooking = confirmedBookings.some((booking) => booking.slot_type === "FULL");
+    const hasAMBooking = confirmedBookings.some((booking) => booking.slot_type === "AM");
+    const hasPMBooking = confirmedBookings.some((booking) => booking.slot_type === "PM");
+
+    const existingBlock = blockedForDate.some((block) => block.slot_type === blockSlot);
+    const bookingConflict =
+      blockSlot === "FULL"
+        ? hasFullBooking || hasAMBooking || hasPMBooking
+        : hasFullBooking || (blockSlot === "AM" ? hasAMBooking : hasPMBooking);
+
+    if (existingBlock) {
+      toast({
+        title: "Slot already blocked",
+        description: `${slotLabels[blockSlot]} is already blocked for this date.`,
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (bookingConflict) {
+      toast({
+        title: "Date already booked",
+        description:
+          blockSlot === "FULL"
+            ? "You cannot block the full day because this date already has a confirmed charter."
+            : `You cannot block ${slotLabels[blockSlot]} because that slot is already booked.`,
+        variant: "destructive",
+      });
+      return;
+    }
+
+    await createBlockedSlot.mutateAsync({
+      date: selectedDateStr,
+      slot_type: blockSlot,
+      reason: blockReason || undefined,
+    });
+
+    setBlockReason("");
+    toast({
+      title: "Availability blocked",
+      description: `${slotLabels[blockSlot]} was blocked for ${format(new Date(`${selectedDateStr}T00:00:00`), "MMM d, yyyy")}.`,
+    });
+  };
+
+  const handleUnblock = async (id: string, slot: SlotType) => {
+    await deleteBlockedSlot.mutateAsync({ id });
+    toast({
+      title: "Availability restored",
+      description: `${slotLabels[slot]} is no longer blocked.`,
+    });
   };
 
   const exportCSV = () => {
@@ -193,10 +244,10 @@ export default function Admin() {
             <form onSubmit={handleLogin} className="space-y-4">
               <div>
                 <Input
-                  type="text"
-                  placeholder="Username or email"
-                  value={usernameOrEmail}
-                  onChange={(e) => setUsernameOrEmail(e.target.value)}
+                  type="email"
+                  placeholder="Email address"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
               <div className="relative">
@@ -216,7 +267,7 @@ export default function Admin() {
               </div>
               {error && <p className="text-sm text-destructive">{error}</p>}
               <p className="text-xs text-muted-foreground">
-                Default login: {DEFAULT_ADMIN_USERNAME} / {DEFAULT_ADMIN_PASSWORD}
+                Use the email/password for your Supabase Auth admin user.
               </p>
               <Button type="submit" className="w-full">
                 Sign in
@@ -274,7 +325,7 @@ export default function Admin() {
                 }}
               />
               <div className="mt-3 text-xs text-muted-foreground">
-                Select a date to view bookings.
+                Select a date to view bookings and manage blocked availability.
               </div>
               <div className="mt-3 flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
                 <div className="flex items-center gap-1.5">
@@ -289,6 +340,72 @@ export default function Admin() {
                   <div className="w-3 h-3 rounded ring-2 ring-purple-400" />
                   <span>PM Booked</span>
                 </div>
+              </div>
+              <div className="mt-5 border-t pt-4">
+                <h4 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+                  Block Availability
+                </h4>
+                {!selectedDate ? (
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    Pick a date on the calendar to block a full day, AM, or PM slot.
+                  </p>
+                ) : (
+                  <div className="mt-3 space-y-3">
+                    <p className="text-sm text-foreground">
+                      Blocking for <span className="font-semibold">{format(selectedDate, "MMMM d, yyyy")}</span>
+                    </p>
+                    <ToggleGroup
+                      type="single"
+                      value={blockSlot}
+                      onValueChange={(value) => {
+                        if (value) setBlockSlot(value as SlotType);
+                      }}
+                      className="justify-start flex-wrap"
+                    >
+                      {(Object.keys(slotLabels) as SlotType[]).map((slot) => (
+                        <ToggleGroupItem key={slot} value={slot} variant="outline" className="min-w-16">
+                          {slotLabels[slot]}
+                        </ToggleGroupItem>
+                      ))}
+                    </ToggleGroup>
+                    <Input
+                      placeholder="Reason (optional)"
+                      value={blockReason}
+                      onChange={(e) => setBlockReason(e.target.value)}
+                    />
+                    <Button
+                      onClick={handleBlockSelectedSlot}
+                      disabled={createBlockedSlot.isPending}
+                    >
+                      Block selected slot
+                    </Button>
+                    <div>
+                      <h5 className="text-sm font-semibold mb-2">Blocked for selected date</h5>
+                      {blockedForDate.length === 0 ? (
+                        <p className="text-sm text-muted-foreground">No blocked slots for this date.</p>
+                      ) : (
+                        <div className="space-y-2">
+                          {blockedForDate.map((block) => (
+                            <div key={block.id} className="flex items-center justify-between gap-3 border rounded-md p-2">
+                              <div className="flex items-center gap-2">
+                                <Badge variant="secondary">{slotLabels[block.slot_type]}</Badge>
+                                <span className="text-sm text-muted-foreground">{block.reason || "No reason"}</span>
+                              </div>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => handleUnblock(block.id, block.slot_type)}
+                                disabled={deleteBlockedSlot.isPending}
+                              >
+                                Unblock
+                              </Button>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -375,8 +492,6 @@ export default function Admin() {
             </div>
           )}
         </div>
-
-        <BlockedSlotManager />
 
         {isLoading ? (
           <div className="flex items-center justify-center py-12">
