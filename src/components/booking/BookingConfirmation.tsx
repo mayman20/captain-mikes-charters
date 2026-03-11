@@ -4,9 +4,9 @@ import { Button } from "@/components/ui/button";
 import { SlotType } from "@/hooks/useBookings";
 
 const slotLabels: Record<SlotType, string> = {
-  AM: "Half-Day Morning (6 AM – 12 PM)",
-  PM: "Half-Day Afternoon (1 PM – 7 PM)",
-  FULL: "Full Day (6 AM – 4 PM)",
+  AM: "Half-Day Morning (4 hours)",
+  PM: "Half-Day Afternoon (4 hours)",
+  FULL: "Full Day (8 hours)",
 };
 
 interface BookingConfirmationProps {
@@ -32,7 +32,7 @@ export function BookingConfirmation({
 
       <h2 className="text-2xl font-bold mb-2">Booking Confirmed!</h2>
       <p className="text-muted-foreground mb-6">
-        Thanks, {name.split(" ")[0]}! We'll see you on the water.
+        Thanks, {name.split(" ")[0]}! The captain will follow up with your departure details.
       </p>
 
       <div className="bg-card rounded-lg border p-6 text-left space-y-4 mb-6">
@@ -67,8 +67,9 @@ export function BookingConfirmation({
         </h4>
         <ul className="space-y-1 text-muted-foreground">
           <li>• You'll receive a confirmation email shortly</li>
-          <li>• We'll text you meeting location details</li>
-          <li>• Questions? Call us at (555) 123-4567</li>
+          <li>• The captain will call with your meeting time and exact Jerusalem location</li>
+          <li>• Deposit details will be sent separately to hold your date</li>
+          <li>• Questions? Call us at (401) 363-8189</li>
         </ul>
       </div>
 

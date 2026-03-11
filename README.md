@@ -1,6 +1,6 @@
-# Captain Mike's Charters Website
+# PushingLimits SportFishing Website
 
-Booking website for Captain Mike's Charters with a public booking flow and an owner-only admin dashboard.
+Booking website for PushingLimits SportFishing with a public booking flow and an owner-only admin dashboard.
 
 ## Stack
 

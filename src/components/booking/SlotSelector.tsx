@@ -11,20 +11,20 @@ interface SlotSelectorProps {
 const slotConfig: Record<SlotType, { label: string; time: string; price: string; icon: React.ReactNode }> = {
   AM: {
     label: "Half-Day Morning",
-    time: "6:00 AM – 12:00 PM",
-    price: "$350",
+    time: "4 hours • time confirmed by captain",
+    price: "$650",
     icon: <Sun className="h-5 w-5" />,
   },
   PM: {
     label: "Half-Day Afternoon",
-    time: "1:00 PM – 7:00 PM",
-    price: "$350",
+    time: "4 hours • time confirmed by captain",
+    price: "$650",
     icon: <Sunset className="h-5 w-5" />,
   },
   FULL: {
     label: "Full Day",
-    time: "6:00 AM – 4:00 PM",
-    price: "$600",
+    time: "8 hours • time confirmed by captain",
+    price: "$1200",
     icon: <Clock className="h-5 w-5" />,
   },
 };
@@ -93,7 +93,7 @@ export function SlotSelector({ selectedDate, selectedSlot, onSelectSlot }: SlotS
         })}
       </div>
       <p className="mt-4 text-xs text-muted-foreground">
-        💵 Cash preferred • Deposit optional on request
+        Venmo deposit required to hold your date. 20% tip is standard.
       </p>
     </div>
   );
