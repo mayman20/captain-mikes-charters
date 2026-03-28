@@ -37,7 +37,7 @@ const slotLabels: Record<SlotType, string> = {
 };
 
 export default function Admin() {
-  const { loading, session } = useAdminAuth();
+  const { loading, session, error: authLoadError } = useAdminAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -47,7 +47,10 @@ export default function Admin() {
   const [blockReason, setBlockReason] = useState("");
 
   const { data: bookings, isLoading } = useAllBookings();
-  const { data: blockedSlots } = useBlockedSlots();
+  const {
+    data: blockedSlots = [],
+    error: blockedSlotsError,
+  } = useBlockedSlots();
   const updateStatus = useUpdateBookingStatus();
   const deleteBooking = useDeleteBooking();
   const createBlockedSlot = useCreateBlockedSlot();
@@ -82,7 +85,7 @@ export default function Admin() {
   }, [bookings, selectedDateStr]);
 
   const blockedForDate = useMemo(() => {
-    if (!selectedDateStr || !blockedSlots) return [];
+    if (!selectedDateStr) return [];
     return blockedSlots.filter((b) => b.date === selectedDateStr);
   }, [blockedSlots, selectedDateStr]);
 
@@ -92,7 +95,7 @@ export default function Admin() {
     }
     const dateStr = format(date, "yyyy-MM-dd");
     const dayBookings = bookings.filter((b) => b.date === dateStr && b.status === "confirmed");
-    const dayBlocked = blockedSlots ? blockedSlots.filter((b) => b.date === dateStr) : [];
+    const dayBlocked = blockedSlots.filter((b) => b.date === dateStr);
     const hasFull = dayBookings.some((b) => b.slot_type === "FULL");
     const hasAM = dayBookings.some((b) => b.slot_type === "AM");
     const hasPM = dayBookings.some((b) => b.slot_type === "PM");
@@ -148,7 +151,13 @@ export default function Admin() {
     const hasAMBooking = confirmedBookings.some((booking) => booking.slot_type === "AM");
     const hasPMBooking = confirmedBookings.some((booking) => booking.slot_type === "PM");
 
-    const existingBlock = blockedForDate.some((block) => block.slot_type === blockSlot);
+    const hasFullBlock = blockedForDate.some((block) => block.slot_type === "FULL");
+    const hasAMBlock = blockedForDate.some((block) => block.slot_type === "AM");
+    const hasPMBlock = blockedForDate.some((block) => block.slot_type === "PM");
+    const existingBlock =
+      blockSlot === "FULL"
+        ? hasFullBlock || hasAMBlock || hasPMBlock
+        : hasFullBlock || (blockSlot === "AM" ? hasAMBlock : hasPMBlock);
     const bookingConflict =
       blockSlot === "FULL"
         ? hasFullBooking || hasAMBooking || hasPMBooking
@@ -266,6 +275,7 @@ export default function Admin() {
                 </button>
               </div>
               {error && <p className="text-sm text-destructive">{error}</p>}
+              {authLoadError && <p className="text-sm text-destructive">{authLoadError}</p>}
               <p className="text-xs text-muted-foreground">
                 Use the email/password for your Supabase Auth admin user.
               </p>
@@ -327,6 +337,12 @@ export default function Admin() {
               <div className="mt-3 text-xs text-muted-foreground">
                 Select a date to view bookings and manage blocked availability.
               </div>
+              {blockedSlotsError && (
+                <div className="mt-3 rounded-md border border-destructive/30 bg-destructive/5 p-3 text-xs text-destructive">
+                  Blocked-slot controls are temporarily unavailable. The calendar can still show bookings, but date
+                  blocking will not work until the `blocked_slots` table and policies are available in Supabase.
+                </div>
+              )}
               <div className="mt-3 flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
                 <div className="flex items-center gap-1.5">
                   <div className="w-3 h-3 rounded bg-muted line-through" />
@@ -372,10 +388,11 @@ export default function Admin() {
                       placeholder="Reason (optional)"
                       value={blockReason}
                       onChange={(e) => setBlockReason(e.target.value)}
+                      disabled={Boolean(blockedSlotsError)}
                     />
                     <Button
                       onClick={handleBlockSelectedSlot}
-                      disabled={createBlockedSlot.isPending}
+                      disabled={createBlockedSlot.isPending || Boolean(blockedSlotsError)}
                     >
                       Block selected slot
                     </Button>
@@ -395,7 +412,7 @@ export default function Admin() {
                                 variant="ghost"
                                 size="sm"
                                 onClick={() => handleUnblock(block.id, block.slot_type)}
-                                disabled={deleteBlockedSlot.isPending}
+                                disabled={deleteBlockedSlot.isPending || Boolean(blockedSlotsError)}
                               >
                                 Unblock
                               </Button>
