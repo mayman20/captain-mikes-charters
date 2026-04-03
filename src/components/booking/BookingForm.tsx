@@ -22,7 +22,7 @@ const bookingSchema = z.object({
   name: z.string().min(2, "Name is required").max(100),
   phone: z.string().min(10, "Valid phone number required").max(20),
   email: z.string().email("Valid email required").max(255),
-  party_size: z.number().min(1).max(6),
+  party_size: z.number().min(1).max(4),
   notes: z.string().max(500).optional(),
 });
 
@@ -100,6 +100,10 @@ export function BookingForm({ selectedDate, selectedSlot, onSuccess }: BookingFo
         </p>
       ) : (
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <div className="rounded-lg border border-border bg-muted/40 p-3 text-xs leading-5 text-muted-foreground">
+            A 20% deposit or card hold is required to secure the trip date. Capacity depends on boat assignment, with up to 4 people on the big boat and up to 3 people on the small boat.
+          </div>
+
           <div>
             <Label htmlFor="name">Full Name</Label>
             <Input
@@ -142,7 +146,7 @@ export function BookingForm({ selectedDate, selectedSlot, onSuccess }: BookingFo
           </div>
 
           <div>
-            <Label>Party Size (Max 6)</Label>
+            <Label>Party Size</Label>
             <Select
               value={partySize.toString()}
               onValueChange={(v) => setPartySize(parseInt(v))}
@@ -151,13 +155,16 @@ export function BookingForm({ selectedDate, selectedSlot, onSuccess }: BookingFo
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                {[1, 2, 3, 4, 5, 6].map((n) => (
+                {[1, 2, 3, 4].map((n) => (
                   <SelectItem key={n} value={n.toString()}>
                     {n} {n === 1 ? "person" : "people"}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
+            <p className="mt-1 text-xs text-muted-foreground">
+              The current booking form is capped at 4 people until the owner confirms how boat assignment should be handled online.
+            </p>
           </div>
 
           <div>
