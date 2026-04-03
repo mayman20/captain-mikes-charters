@@ -9,18 +9,24 @@ const tripStyles = [
     title: "Inshore",
     image: "/homepage/inshore.jpg",
     description: "Half to full day sessions targeting seabass, fluke, striped bass.",
+    imagePosition: "center 32%",
+    species: ["Seabass", "Fluke", "Striped Bass"],
   },
   {
     title: "Nearshore",
     image: "/homepage/nearshore.jpg",
     description:
       "Half to full day bookings 5-8 hours. Targeting striped bass, seabass, fluke, porgy, sharks, bonita, false albacore.",
+    imagePosition: "center 46%",
+    species: ["Striped Bass", "Seabass", "Fluke", "Porgy", "Sharks", "Bonita", "False Albacore"],
   },
   {
     title: "Offshore",
     image: "/homepage/offshore.jpg",
     description:
       "Contact for more info. Full day or overnight charters available. Targeting tuna, sharks.",
+    imagePosition: "center 44%",
+    species: ["Tuna", "Sharks"],
   },
 ];
 
@@ -93,7 +99,7 @@ export default function MockHome() {
             style={{
               backgroundImage:
                 "linear-gradient(180deg, rgba(5, 23, 38, 0.2), rgba(5, 23, 38, 0.68)), url('/homepage/front_image.jpg')",
-              backgroundPosition: `center calc(50% + ${heroOffset}px)`,
+              backgroundPosition: `center calc(34% + ${heroOffset}px)`,
               backgroundSize: "cover",
             }}
           />
@@ -210,14 +216,30 @@ export default function MockHome() {
                       src={trip.image}
                       alt={`${trip.title} charter fishing`}
                       className="h-full w-full object-cover transition-transform duration-500 hover:scale-[1.04]"
+                      style={{ objectPosition: trip.imagePosition }}
                       loading="lazy"
                     />
                   </div>
-                  <div className="space-y-3 p-5 md:p-6">
+                  <div className="space-y-4 p-5 md:p-6">
                     <h3 className="text-3xl font-black tracking-[-0.04em] text-slate-950">
                       {trip.title}
                     </h3>
                     <p className="text-sm leading-6 text-slate-600">{trip.description}</p>
+                    <div className="space-y-3 border-t border-slate-200 pt-4">
+                      <p className="text-xs font-semibold uppercase tracking-[0.22em] text-primary">
+                        Targeted Species
+                      </p>
+                      <div className="flex flex-wrap gap-2">
+                        {trip.species.map((species) => (
+                          <span
+                            key={species}
+                            className="rounded-full border border-[#cfe0e5] bg-[#f5fbfd] px-3 py-1 text-xs font-semibold uppercase tracking-[0.08em] text-slate-700"
+                          >
+                            {species}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 </article>
               ))}
