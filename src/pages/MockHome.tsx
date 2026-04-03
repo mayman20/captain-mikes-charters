@@ -1,105 +1,138 @@
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
-import { Anchor, ArrowRight, BadgeDollarSign, Fish, Phone, Star, Waves } from "lucide-react";
+import { Anchor, ArrowRight, Compass, Fish, Phone, Waves } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-const heroImages = [
-  "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=1400&q=80",
-  "https://images.unsplash.com/photo-1515238152791-8216bfdf89a7?auto=format&fit=crop&w=1200&q=80",
-  "https://images.unsplash.com/photo-1500375592092-40eb2168fd21?auto=format&fit=crop&w=1200&q=80",
-];
-
-const catchImages = [
-  "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&w=1200&q=80",
-  "https://images.unsplash.com/photo-1468581264429-2548ef9eb732?auto=format&fit=crop&w=1200&q=80",
-  "https://images.unsplash.com/photo-1473116763249-2faaef81ccda?auto=format&fit=crop&w=1200&q=80",
-  "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80",
-];
-
-const highlights = [
+const tripStyles = [
   {
-    title: "Half-Day Charters",
-    text: "Morning and afternoon trips with a tighter, action-first format and flexible departure times.",
+    title: "Inshore",
+    image: "/homepage/inshore.jpg",
+    description: "Half to full day sessions targeting seabass, fluke, striped bass.",
   },
   {
-    title: "Full-Day Runs",
-    text: "Eight hours on the water with room to cover more ground and adjust to the bite.",
+    title: "Nearshore",
+    image: "/homepage/nearshore.jpg",
+    description:
+      "Half to full day bookings 5-8 hours. Targeting striped bass, seabass, fluke, porgy, sharks, bonita, false albacore.",
   },
   {
-    title: "Phone-Only Specialty Trips",
-    text: "Nearshore tuna, offshore tuna, overnight runs, giant tuna, and shark trips are handled directly by phone.",
+    title: "Offshore",
+    image: "/homepage/offshore.jpg",
+    description:
+      "Contact for more info. Full day or overnight charters available. Targeting tuna, sharks.",
   },
 ];
 
-const mockTrips = [
+const stats = [
   {
-    title: "Morning Half-Day",
-    price: "$650",
-    text: "A 4-hour trip with final timing set by the captain based on conditions.",
-    image: heroImages[0],
+    icon: Anchor,
+    label: "Rhode Island departures",
+    text: "Private sportfishing charters built around local conditions and the bite.",
   },
   {
-    title: "Afternoon Half-Day",
-    price: "$650",
-    text: "A second 4-hour trip can be booked on the same day if the date is open.",
-    image: heroImages[1],
+    icon: Fish,
+    label: "Trip styles",
+    text: "Inshore, nearshore, and offshore trips with options for half days, full days, and overnights.",
   },
   {
-    title: "Full-Day",
-    price: "$1200",
-    text: "An 8-hour charter that blocks the date and gives more room to chase the bite.",
-    image: heroImages[2],
+    icon: Waves,
+    label: "Call for specialty trips",
+    text: "Reach out directly for offshore and overnight planning, seasonal timing, and trip details.",
   },
 ];
 
 export default function MockHome() {
+  const [scrollY, setScrollY] = useState(0);
+  const [allowMotion, setAllowMotion] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const updateMotionPreference = () => {
+      setAllowMotion(!media.matches && window.innerWidth >= 768);
+    };
+
+    const handleScroll = () => {
+      if (!allowMotion) {
+        return;
+      }
+
+      setScrollY(window.scrollY);
+    };
+
+    updateMotionPreference();
+    window.addEventListener("resize", updateMotionPreference);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    if (typeof media.addEventListener === "function") {
+      media.addEventListener("change", updateMotionPreference);
+    }
+
+    return () => {
+      window.removeEventListener("resize", updateMotionPreference);
+      window.removeEventListener("scroll", handleScroll);
+
+      if (typeof media.removeEventListener === "function") {
+        media.removeEventListener("change", updateMotionPreference);
+      }
+    };
+  }, [allowMotion]);
+
+  const heroOffset = allowMotion ? Math.min(scrollY * 0.18, 120) : 0;
+
   return (
     <Layout>
-      <div className="bg-stone-50 text-slate-950">
+      <div className="bg-[#f7f1e8] text-slate-950">
         <section className="relative isolate overflow-hidden">
-          <div className="absolute inset-0 grid grid-cols-1 md:grid-cols-3">
-            {heroImages.map((src, index) => (
-              <div key={src} className="relative min-h-[260px] md:min-h-[680px]">
-                <img
-                  src={src}
-                  alt={index === 0 ? "Open water at sunrise" : index === 1 ? "Sport fishing action" : "Offshore ocean scene"}
-                  className="h-full w-full object-cover"
-                />
-                <div className="absolute inset-0 bg-stone-950/25" />
-              </div>
-            ))}
-          </div>
-          <div className="absolute inset-0 bg-gradient-to-r from-stone-50/95 via-stone-50/78 to-stone-50/18" />
+          <div
+            className="absolute inset-0 scale-110"
+            style={{
+              backgroundImage:
+                "linear-gradient(180deg, rgba(5, 23, 38, 0.2), rgba(5, 23, 38, 0.68)), url('/homepage/front_image.jpg')",
+              backgroundPosition: `center calc(50% + ${heroOffset}px)`,
+              backgroundSize: "cover",
+            }}
+          />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.16),transparent_32%),linear-gradient(90deg,rgba(6,24,38,0.9),rgba(6,24,38,0.38),rgba(6,24,38,0.22))]" />
 
-          <div className="container relative py-20 md:py-32">
-            <div className="max-w-2xl space-y-6">
-              <div className="inline-flex items-center gap-2 rounded-full border border-sky-200 bg-white/80 px-4 py-2 text-sm uppercase tracking-[0.25em] text-sky-800 shadow-sm">
-                <Anchor className="h-4 w-4" />
-                PushingLimits SportFishing
+          <div className="container relative flex min-h-[76svh] items-end py-16 md:min-h-[88svh] md:py-24">
+            <div className="max-w-3xl space-y-6 md:space-y-8">
+              <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.28em] text-white/90 backdrop-blur-sm md:text-sm">
+                <Compass className="h-4 w-4" />
+                Pushing Limits Sportfishing
               </div>
-              <h1 className="text-5xl font-black uppercase leading-none tracking-tight md:text-7xl">
-                Big Water.
-                <br />
-                Hard Runs.
-                <br />
-                Real Fish.
-              </h1>
-              <p className="max-w-xl text-base text-slate-700 md:text-lg">
-                This is a mock image-led homepage direction inspired by the photo-first charter sites you like. It keeps your current booking system, but shifts the public side toward a stronger visual sales page.
-              </p>
+
+              <div className="space-y-4">
+                <h1 className="max-w-2xl text-4xl font-black uppercase leading-[0.92] tracking-[-0.04em] text-white md:text-7xl">
+                  Rhode Island
+                  <br />
+                  sport fishing
+                  <br />
+                  with more pull.
+                </h1>
+                <p className="max-w-xl text-sm leading-6 text-white/80 md:text-lg md:leading-8">
+                  Chase striped bass, seabass, fluke, tuna, sharks, and more with Pushing Limits Sportfishing out of Rhode Island.
+                </p>
+              </div>
+
               <div className="flex flex-col gap-3 sm:flex-row">
-                <Link to="/mock-book">
+                <Link to="/book">
                   <Button size="lg" className="w-full bg-accent text-accent-foreground hover:bg-accent/90 sm:w-auto">
-                    View Mock Booking Page
+                    Book a Charter
                   </Button>
                 </Link>
-                <a href="tel:+14013638189">
+                <a href="tel:+14013638189" className="sm:inline-flex">
                   <Button
                     size="lg"
                     variant="outline"
-                    className="w-full border-slate-300 bg-white/85 text-slate-950 hover:bg-slate-950 hover:text-white sm:w-auto"
+                    className="w-full border-white/30 bg-white/10 text-white backdrop-blur-sm hover:bg-white hover:text-slate-950 sm:w-auto"
                   >
-                    Call (401) 363-8189
+                    <Phone className="mr-2 h-4 w-4" />
+                    (401) 363-8189
                   </Button>
                 </a>
               </div>
@@ -107,144 +140,87 @@ export default function MockHome() {
           </div>
         </section>
 
-        <section className="border-y border-stone-200 bg-white">
-          <div className="container grid gap-6 py-8 md:grid-cols-3">
-            <div className="flex items-center gap-3">
-              <Fish className="h-5 w-5 text-sky-700" />
-              <div>
-                <div className="font-semibold">4-Hour Half Days</div>
-                <div className="text-sm text-slate-600">Morning or afternoon</div>
+        <section className="border-b border-slate-200 bg-white">
+          <div className="container grid gap-5 py-8 md:grid-cols-3 md:py-10">
+            {stats.map(({ icon: Icon, label, text }) => (
+              <div key={label} className="rounded-[1.75rem] border border-slate-200 bg-[#fcfaf7] p-5 shadow-sm">
+                <Icon className="mb-4 h-5 w-5 text-primary" />
+                <h2 className="mb-2 text-base font-bold uppercase tracking-[0.08em] text-slate-900">
+                  {label}
+                </h2>
+                <p className="text-sm leading-6 text-slate-600">{text}</p>
               </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <BadgeDollarSign className="h-5 w-5 text-sky-700" />
-              <div>
-                <div className="font-semibold">$650 Half Day / $1200 Full Day</div>
-                <div className="text-sm text-slate-600">20% tip is standard</div>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <Waves className="h-5 w-5 text-sky-700" />
-              <div>
-                <div className="font-semibold">Jerusalem, Rhode Island</div>
-                <div className="text-sm text-slate-600">Final meeting details by phone</div>
-              </div>
-            </div>
+            ))}
           </div>
         </section>
 
-        <section className="bg-[linear-gradient(180deg,#fffaf4_0%,#f7efe3_100%)] py-16 md:py-24">
-          <div className="container grid gap-12 lg:grid-cols-[1.1fr_0.9fr]">
-            <div className="space-y-6">
-              <p className="text-sm font-semibold uppercase tracking-[0.3em] text-sky-700">
-                Mock Direction
+        <section className="bg-[linear-gradient(180deg,#f7f1e8_0%,#ffffff_100%)] py-14 md:py-20">
+          <div className="container grid gap-10 lg:grid-cols-[0.78fr_1.22fr] lg:items-center">
+            <div className="space-y-5">
+              <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary">
+                Rates Snapshot
               </p>
-              <h2 className="text-3xl font-bold uppercase md:text-5xl">
-                The homepage can sell the experience before it asks for the booking.
+              <h2 className="text-3xl font-black uppercase leading-tight tracking-[-0.03em] text-slate-950 md:text-5xl">
+                Straightforward pricing.
               </h2>
-              <p className="max-w-2xl text-slate-700">
-                The main difference from your current site is emphasis. Instead of leading with mostly text, this version leads with strong fish, boat, water, and captain imagery, then supports it with tighter copy blocks and direct calls to action.
+              <p className="text-sm leading-6 text-slate-600 md:text-base">
+                Rates are easy to scan on mobile and desktop. For offshore and overnight trips, call directly for details and availability.
               </p>
-              <div className="grid gap-4 md:grid-cols-3">
-                {highlights.map((item) => (
-                  <div key={item.title} className="rounded-3xl border border-stone-200 bg-white p-5 shadow-sm">
-                    <div className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-sky-700">
-                      {item.title}
-                    </div>
-                    <p className="text-sm text-slate-600">{item.text}</p>
-                  </div>
-                ))}
-              </div>
+              <Link to="/info" className="inline-flex">
+                <Button variant="outline" className="border-slate-300 bg-white hover:bg-slate-950 hover:text-white">
+                  View Full Trip Info
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
             </div>
 
-            <div className="grid gap-4 sm:grid-cols-2">
-              {catchImages.map((src, index) => (
-                <div
-                  key={src}
-                  className={`overflow-hidden rounded-3xl border border-stone-200 bg-white shadow-sm ${index === 0 ? "sm:col-span-2" : ""}`}
-                >
-                  <img
-                    src={src}
-                    alt={`Fishing gallery image ${index + 1}`}
-                    className={`w-full object-cover ${index === 0 ? "h-72" : "h-56"}`}
-                  />
-                </div>
-              ))}
+            <div className="overflow-hidden rounded-[2rem] border border-[#d7d0c5] bg-white p-3 shadow-[0_24px_60px_-36px_rgba(15,23,42,0.55)] md:p-5">
+              <img
+                src="/homepage/pricing.png"
+                alt="Pushing Limits Sportfishing pricing"
+                className="h-auto w-full rounded-[1.25rem] object-cover"
+                loading="lazy"
+              />
             </div>
           </div>
         </section>
 
-        <section className="bg-slate-100 py-16 text-slate-950 md:py-24">
+        <section className="bg-[#ecf4f7] py-14 md:py-20">
           <div className="container">
-            <div className="mb-10 max-w-2xl space-y-4">
-              <p className="text-sm font-semibold uppercase tracking-[0.3em] text-sky-700">
-                Trip Types
+            <div className="mb-8 max-w-2xl space-y-4 md:mb-12">
+              <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary">
+                Types of Fishing
               </p>
-              <h2 className="text-3xl font-bold uppercase md:text-5xl">
-                Simple structure, stronger visuals
+              <h2 className="text-3xl font-black tracking-[-0.03em] text-slate-950 md:text-5xl">
+                Inshore, nearshore, and offshore at a glance.
               </h2>
-              <p className="text-slate-600">
-                These cards mirror the kind of straightforward, image-supported sections used on the reference site.
+              <p className="text-sm leading-6 text-slate-600 md:text-base">
+                Pick the trip style that fits the day, the season, and what you want to target.
               </p>
             </div>
 
             <div className="grid gap-6 md:grid-cols-3">
-              {mockTrips.map((item) => (
-                <div key={item.title} className="overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-sm">
-                  <div className="h-56 overflow-hidden">
+              {tripStyles.map((trip) => (
+                <article
+                  key={trip.title}
+                  className="overflow-hidden rounded-[2rem] border border-[#cfe0e5] bg-white shadow-[0_20px_50px_-38px_rgba(15,23,42,0.7)]"
+                >
+                  <div className="aspect-[5/4] overflow-hidden">
                     <img
-                      src={item.image}
-                      alt={item.title}
-                      className="h-full w-full object-cover"
+                      src={trip.image}
+                      alt={`${trip.title} charter fishing`}
+                      className="h-full w-full object-cover transition-transform duration-500 hover:scale-[1.04]"
+                      loading="lazy"
                     />
                   </div>
-                  <div className="space-y-4 p-6">
-                    <div className="flex items-center justify-between gap-4">
-                      <h3 className="text-xl font-bold">{item.title}</h3>
-                      <span className="text-sm font-semibold uppercase tracking-[0.2em] text-sky-700">{item.price}</span>
-                    </div>
-                    <p className="text-sm text-slate-600">{item.text}</p>
+                  <div className="space-y-3 p-5 md:p-6">
+                    <h3 className="text-3xl font-black tracking-[-0.04em] text-slate-950">
+                      {trip.title}
+                    </h3>
+                    <p className="text-sm leading-6 text-slate-600">{trip.description}</p>
                   </div>
-                </div>
+                </article>
               ))}
-            </div>
-          </div>
-        </section>
-
-        <section className="bg-[#eef6fb] py-16 md:py-24">
-          <div className="container grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
-            <div className="rounded-[2rem] border border-sky-100 bg-white p-8 shadow-sm">
-              <div className="mb-4 flex items-center gap-2 text-sky-700">
-                <Star className="h-5 w-5" />
-                <span className="text-sm font-semibold uppercase tracking-[0.25em]">Why This Direction Works</span>
-              </div>
-              <div className="space-y-4 text-sm text-slate-600">
-                <p>It feels more like a fishing charter brand and less like a utility booking form.</p>
-                <p>It gives you room to feature client catches, the boat, Captain Mike, and species-specific visuals.</p>
-                <p>It still supports your current booking workflow instead of forcing a full rebuild.</p>
-              </div>
-            </div>
-            <div className="flex flex-col justify-center gap-6">
-              <h2 className="text-3xl font-bold uppercase md:text-5xl">
-                If this is the right direction, the next step is real photo assets.
-              </h2>
-              <p className="max-w-2xl text-slate-700">
-                This mock uses stock photography as stand-ins. To make it believable, we would swap in real catch photos, boat photos, captain photos, and dock shots from your client.
-              </p>
-              <div className="flex flex-col gap-3 sm:flex-row">
-                <Link to="/mock-book">
-                  <Button size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90">
-                    Open Mock Booking
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
-                </Link>
-                <a href="tel:+14013638189" className="inline-flex">
-                  <Button size="lg" variant="outline" className="border-slate-300 bg-white text-slate-950 hover:bg-slate-950 hover:text-white">
-                    <Phone className="mr-2 h-4 w-4" />
-                    Call the Captain
-                  </Button>
-                </a>
-              </div>
             </div>
           </div>
         </section>
