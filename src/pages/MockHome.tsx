@@ -9,7 +9,7 @@ const tripStyles = [
     title: "Inshore",
     image: "/homepage/inshore.jpg",
     description: "Half to full day sessions targeting seabass, fluke, striped bass.",
-    imagePosition: "center 32%",
+    imagePosition: "center 28%",
     species: ["Seabass", "Fluke", "Striped Bass"],
   },
   {
@@ -17,7 +17,7 @@ const tripStyles = [
     image: "/homepage/nearshore.jpg",
     description:
       "Half to full day bookings 5-8 hours. Targeting striped bass, seabass, fluke, porgy, sharks, bonita, false albacore.",
-    imagePosition: "center 46%",
+    imagePosition: "center 40%",
     species: ["Striped Bass", "Seabass", "Fluke", "Porgy", "Sharks", "Bonita", "False Albacore"],
   },
   {
@@ -180,11 +180,11 @@ export default function MockHome() {
               </Link>
             </div>
 
-            <div className="overflow-hidden rounded-[2rem] border border-[#d7d0c5] bg-white p-3 shadow-[0_24px_60px_-36px_rgba(15,23,42,0.55)] md:p-5">
+            <div className="overflow-hidden border border-[#d7d0c5] bg-white p-1 shadow-[0_20px_45px_-36px_rgba(15,23,42,0.55)]">
               <img
                 src="/homepage/pricing.png"
                 alt="Pushing Limits Sportfishing pricing"
-                className="h-auto w-full rounded-[1.25rem] object-cover"
+                className="h-auto w-full object-cover"
                 loading="lazy"
               />
             </div>
