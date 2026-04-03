@@ -46,6 +46,9 @@ export default function Info() {
           <p className="mt-4 text-sm text-muted-foreground">
             20% tip is standard for all charters. Tuna and shark trips are available by phone only at (401) 363-8189.
           </p>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Overnight tuna and shark trips are available by phone only. Contact the captain directly for pricing, timing, and availability.
+          </p>
         </section>
 
         <section className="mb-10">
@@ -121,25 +124,35 @@ export default function Info() {
         <section className="mb-10">
           <h2 className="flex items-center gap-2 text-xl font-bold mb-4">
             <Anchor className="h-5 w-5 text-primary" />
-            The Boat
+            Boats & Capacity
           </h2>
-          <div className="bg-card rounded-lg border p-5">
+          <div className="bg-card rounded-lg border p-5 space-y-5">
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="flex items-start gap-3">
                 <Users className="h-5 w-5 text-muted-foreground mt-0.5" />
                 <div>
-                  <div className="font-semibold">Capacity</div>
-                  <div className="text-sm text-muted-foreground">Up to 6 passengers</div>
+                  <div className="font-semibold">Big boat</div>
+                  <div className="text-sm text-muted-foreground">Up to 4 passengers</div>
                 </div>
               </div>
               <div className="flex items-start gap-3">
-                <Clock className="h-5 w-5 text-muted-foreground mt-0.5" />
+                <Users className="h-5 w-5 text-muted-foreground mt-0.5" />
                 <div>
-                  <div className="font-semibold">Trip Length</div>
-                  <div className="text-sm text-muted-foreground">4-hour half day or 8-hour full day</div>
+                  <div className="font-semibold">Small boat</div>
+                  <div className="text-sm text-muted-foreground">Up to 3 passengers</div>
                 </div>
               </div>
             </div>
+            <div className="flex items-start gap-3">
+              <Clock className="h-5 w-5 text-muted-foreground mt-0.5" />
+              <div>
+                <div className="font-semibold">Trip Length</div>
+                <div className="text-sm text-muted-foreground">4-hour half day, 8-hour full day, or call for overnight trip details</div>
+              </div>
+            </div>
+            <p className="text-sm text-muted-foreground">
+              Final boat assignment depends on trip type, group size, and conditions.
+            </p>
           </div>
         </section>
 
@@ -165,11 +178,11 @@ export default function Info() {
           </h2>
           <div className="bg-warning/10 border border-warning/30 rounded-lg p-5 text-sm">
             <ul className="space-y-2">
-              <li><strong>Deposit required:</strong> Your date remains open to others until a deposit is received.</li>
-              <li><strong>Within 3 days:</strong> Deposit is forfeit if your group cancels within 3 days of departure.</li>
-              <li><strong>Within 72 hours:</strong> Full charter amount is owed if the trip is canceled within 72 hours of departure time on your charter date.</li>
+              <li><strong>Deposit/card hold:</strong> A 20% deposit or card hold is required to secure the trip date.</li>
+              <li><strong>Within one week:</strong> If you cancel within one week of your scheduled trip date, 40% of the trip total is owed.</li>
+              <li><strong>Day prior or day of trip:</strong> If you cancel the day before or the day of the trip, the full trip amount is owed.</li>
               <li><strong>Weather:</strong> Weather decisions are at the captain's discretion and may be made at the dock the morning of the trip.</li>
-              <li><strong>Bad weather reschedule:</strong> Deposit can transfer to a future date or be returned if no future date can be agreed on.</li>
+              <li><strong>Bad weather reschedule:</strong> Deposits can transfer to a future date or be returned if no future date can be agreed on.</li>
             </ul>
           </div>
         </section>
@@ -181,11 +194,24 @@ export default function Info() {
           </h2>
           <div className="bg-card rounded-lg border p-5 text-sm text-muted-foreground space-y-3">
             <p>
-              Deposits will be collected through Venmo. Deposit instructions will be sent directly by the captain.
+              A 20% deposit or card hold is required before a date is considered locked in on the calendar.
             </p>
             <p>
               Verbally discussed dates are not held on the calendar until the deposit is received.
             </p>
+            <p>
+              Final payment method is still being finalized. Deposit instructions will be sent directly by the captain.
+            </p>
+          </div>
+        </section>
+
+        <section className="mb-10">
+          <h2 className="flex items-center gap-2 text-xl font-bold mb-4">
+            <AlertCircle className="h-5 w-5 text-warning" />
+            Broken Equipment Policy
+          </h2>
+          <div className="bg-card rounded-lg border p-5 text-sm text-muted-foreground">
+            If rods, reels, gear, or boat parts are broken due to client fault, the customer is responsible for 50% of the value of the damaged equipment.
           </div>
         </section>
 

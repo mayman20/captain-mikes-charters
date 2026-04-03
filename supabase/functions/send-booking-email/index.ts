@@ -12,9 +12,9 @@ type BookingPayload = {
 };
 
 const SLOT_DETAILS: Record<BookingPayload["slot_type"], { label: string; time: string; duration: string }> = {
-  AM: { label: "Half-Day Morning", time: "6:00 AM – 12:00 PM", duration: "6 hours" },
-  PM: { label: "Half-Day Afternoon", time: "1:00 PM – 7:00 PM", duration: "6 hours" },
-  FULL: { label: "Full Day", time: "6:00 AM – 4:00 PM", duration: "10 hours" },
+  AM: { label: "Half-Day Morning", time: "Departure time confirmed by captain", duration: "4 hours" },
+  PM: { label: "Half-Day Afternoon", time: "Departure time confirmed by captain", duration: "4 hours" },
+  FULL: { label: "Full Day", time: "Departure time confirmed by captain", duration: "8 hours" },
 };
 
 const corsHeaders = {
@@ -35,47 +35,6 @@ function formatDate(dateStr: string) {
   });
 }
 
-function base64UrlEncode(input: string) {
-  const bytes = new TextEncoder().encode(input);
-  let binary = "";
-  for (let i = 0; i < bytes.length; i += 1) {
-    binary += String.fromCharCode(bytes[i]);
-  }
-  const base64 = btoa(binary);
-  return base64.replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
-}
-
-async function getAccessToken() {
-  const clientId = Deno.env.get("GMAIL_CLIENT_ID");
-  const clientSecret = Deno.env.get("GMAIL_CLIENT_SECRET");
-  const refreshToken = Deno.env.get("GMAIL_REFRESH_TOKEN");
-
-  if (!clientId || !clientSecret || !refreshToken) {
-    throw new Error("Missing Gmail OAuth credentials.");
-  }
-
-  const body = new URLSearchParams({
-    client_id: clientId,
-    client_secret: clientSecret,
-    refresh_token: refreshToken,
-    grant_type: "refresh_token",
-  });
-
-  const res = await fetch("https://oauth2.googleapis.com/token", {
-    method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body,
-  });
-
-  if (!res.ok) {
-    const errorText = await res.text();
-    throw new Error(`Failed to get access token: ${res.status} ${errorText}`);
-  }
-
-  const data = await res.json();
-  return data.access_token as string;
-}
-
 async function sendEmail({
   to,
   subject,
@@ -87,49 +46,31 @@ async function sendEmail({
   text: string;
   html: string;
 }) {
-  const gmailUser = Deno.env.get("GMAIL_USER");
-  if (!gmailUser) {
-    throw new Error("Missing Gmail sender address.");
+  const resendApiKey = Deno.env.get("RESEND_API_KEY");
+  const resendFromEmail = Deno.env.get("RESEND_FROM_EMAIL");
+
+  if (!resendApiKey || !resendFromEmail) {
+    throw new Error("Missing Resend configuration.");
   }
 
-  const accessToken = await getAccessToken();
-
-  const boundary = `boundary_${crypto.randomUUID()}`;
-  const rawMessage = [
-    `From: Captain Mike's Charters <${gmailUser}>`,
-    `To: ${to}`,
-    `Subject: ${subject}`,
-    "MIME-Version: 1.0",
-    `Content-Type: multipart/alternative; boundary="${boundary}"`,
-    "",
-    `--${boundary}`,
-    "Content-Type: text/plain; charset=UTF-8",
-    "",
-    text,
-    "",
-    `--${boundary}`,
-    "Content-Type: text/html; charset=UTF-8",
-    "",
-    html,
-    "",
-    `--${boundary}--`,
-    "",
-  ].join("\r\n");
-
-  const raw = base64UrlEncode(rawMessage);
-
-  const res = await fetch("https://gmail.googleapis.com/gmail/v1/users/me/messages/send", {
+  const res = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: `Bearer ${resendApiKey}`,
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ raw }),
+    body: JSON.stringify({
+      from: `Pushing Limits Sportfishing <${resendFromEmail}>`,
+      to: [to],
+      subject,
+      text,
+      html,
+    }),
   });
 
   if (!res.ok) {
     const errorText = await res.text();
-    throw new Error(`Gmail send failed: ${res.status} ${errorText}`);
+    throw new Error(`Resend send failed: ${res.status} ${errorText}`);
   }
 }
 
@@ -160,8 +101,8 @@ serve(async (req) => {
   const slot = SLOT_DETAILS[booking.slot_type];
   const formattedDate = formatDate(booking.date);
 
-  const subjectCustomer = "Captain Mike's Charters - Booking Confirmed";
-  const subjectOwner = "New Booking – Captain Mike's Charters";
+  const subjectCustomer = "Pushing Limits Sportfishing - Booking Confirmed";
+  const subjectOwner = "New Booking – Pushing Limits Sportfishing";
 
   const detailLines = [
     `Date: ${formattedDate}`,
@@ -175,7 +116,7 @@ serve(async (req) => {
   ].filter(Boolean);
 
   const textBody = [
-    "Thanks for booking with Captain Mike's Charters!",
+    "Thanks for booking with Pushing Limits Sportfishing!",
     "",
     ...detailLines,
     "",
@@ -183,8 +124,8 @@ serve(async (req) => {
   ].join("\n");
 
   const htmlBody = `
-    <h2>Captain Mike's Charters – Booking Confirmed</h2>
-    <p>Thanks for booking with Captain Mike's Charters!</p>
+    <h2>Pushing Limits Sportfishing – Booking Confirmed</h2>
+    <p>Thanks for booking with Pushing Limits Sportfishing!</p>
     <ul>
       ${detailLines.map((line) => `<li>${line}</li>`).join("")}
     </ul>
