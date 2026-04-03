@@ -1,8 +1,7 @@
-import Info from "./Info";
+import MockHome from "./MockHome";
 
-// The trip info page is the landing page
 const Index = () => {
-  return <Info />;
+  return <MockHome />;
 };
 
 export default Index;
