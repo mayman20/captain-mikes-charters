@@ -1,6 +1,6 @@
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
-import { Anchor, ArrowRight, Compass, Fish, Phone, Waves } from "lucide-react";
+import { Anchor, ArrowRight, Compass, CreditCard, Fish, Phone, Waves, Wrench } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -9,22 +9,34 @@ const tripStyles = [
     title: "Inshore",
     image: "/homepage/inshore.jpg",
     description: "Half to full day sessions targeting seabass, fluke, striped bass.",
-    imagePosition: "center 28%",
+    imagePosition: "center 34%",
     species: ["Seabass", "Fluke", "Striped Bass"],
+    details: [
+      "Half-day and full-day options depending on the trip plan.",
+      "Great fit for seabass, fluke, and striped bass.",
+    ],
   },
   {
     title: "Nearshore",
     image: "/homepage/nearshore.jpg",
     description:
       "Half to full day bookings 5-8 hours. Targeting striped bass, seabass, fluke, porgy, sharks, bonita, false albacore.",
-    imagePosition: "center 40%",
+    imagePosition: "center 35%",
     species: ["Striped Bass", "Seabass", "Fluke", "Porgy", "Sharks", "Bonita", "False Albacore"],
+    details: [
+      "Trips run roughly 5 to 8 hours depending on the day and target.",
+      "Block Island and nearshore plans can be tailored around the bite.",
+    ],
   },
   {
     title: "Offshore",
     image: "/homepage/offshore.jpg",
     description:
       "Contact for more info. Full day or overnight charters available. Targeting tuna, sharks.",
+    details: [
+      "Full-day offshore runs plus overnight shark and tuna trips.",
+      "Overnight trips are phone-only and can range from 12 to 30 hours.",
+    ],
     imagePosition: "center 44%",
     species: ["Tuna", "Sharks"],
   },
@@ -45,6 +57,24 @@ const stats = [
     icon: Waves,
     label: "Call for specialty trips",
     text: "Reach out directly for offshore and overnight planning, seasonal timing, and trip details.",
+  },
+];
+
+const policyHighlights = [
+  {
+    icon: CreditCard,
+    title: "20% deposit / card hold",
+    text: "A 20% deposit or card hold is required to secure the date on the calendar.",
+  },
+  {
+    icon: Anchor,
+    title: "Boat capacity",
+    text: "Big boat up to 4 people. Small boat up to 3 people. Final boat assignment depends on the trip.",
+  },
+  {
+    icon: Wrench,
+    title: "Broken equipment policy",
+    text: "If rods, reels, gear, or boat parts are broken at client fault, the customer is responsible for 50% of the value.",
   },
 ];
 
@@ -225,6 +255,13 @@ export default function MockHome() {
                       {trip.title}
                     </h3>
                     <p className="text-sm leading-6 text-slate-600">{trip.description}</p>
+                    <div className="space-y-2">
+                      {trip.details.map((detail) => (
+                        <p key={detail} className="text-sm leading-6 text-slate-600">
+                          {detail}
+                        </p>
+                      ))}
+                    </div>
                     <div className="space-y-3 border-t border-slate-200 pt-4">
                       <p className="text-xs font-semibold uppercase tracking-[0.22em] text-primary">
                         Targeted Species
@@ -243,6 +280,58 @@ export default function MockHome() {
                   </div>
                 </article>
               ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="bg-[linear-gradient(180deg,#ffffff_0%,#f7f1e8_100%)] py-14 md:py-20">
+          <div className="container">
+            <div className="mb-8 max-w-2xl space-y-4">
+              <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary">
+                Booking Details
+              </p>
+              <h2 className="text-3xl font-black tracking-[-0.03em] text-slate-950 md:text-5xl">
+                Important details up front.
+              </h2>
+              <p className="text-sm leading-6 text-slate-600 md:text-base">
+                The homepage should make the basics easy to understand before someone clicks into the full booking flow.
+              </p>
+            </div>
+
+            <div className="grid gap-5 md:grid-cols-3">
+              {policyHighlights.map(({ icon: Icon, title, text }) => (
+                <div key={title} className="border border-slate-200 bg-white p-5 shadow-sm">
+                  <Icon className="mb-4 h-5 w-5 text-primary" />
+                  <h3 className="mb-2 text-base font-bold uppercase tracking-[0.08em] text-slate-900">
+                    {title}
+                  </h3>
+                  <p className="text-sm leading-6 text-slate-600">{text}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-8 grid gap-5 md:grid-cols-2">
+              <div className="border border-slate-200 bg-white p-5 shadow-sm">
+                <h3 className="mb-3 text-base font-bold uppercase tracking-[0.08em] text-slate-900">
+                  Cancellation policy
+                </h3>
+                <div className="space-y-2 text-sm leading-6 text-slate-600">
+                  <p>If you cancel within one week of the scheduled trip date, 40% of the trip total is owed.</p>
+                  <p>If you cancel the day prior or the day of the trip, the full trip amount is owed.</p>
+                  <p>Weather decisions are at the captain’s discretion, and weather-related trips can be rescheduled.</p>
+                </div>
+              </div>
+
+              <div className="border border-slate-200 bg-white p-5 shadow-sm">
+                <h3 className="mb-3 text-base font-bold uppercase tracking-[0.08em] text-slate-900">
+                  Packages at a glance
+                </h3>
+                <div className="space-y-2 text-sm leading-6 text-slate-600">
+                  <p>Inshore and nearshore trips can be booked online.</p>
+                  <p>Offshore full-day trips are available, with overnights handled by phone.</p>
+                  <p>For overnight tuna and shark trips, call directly for information before booking.</p>
+                </div>
+              </div>
             </div>
           </div>
         </section>
