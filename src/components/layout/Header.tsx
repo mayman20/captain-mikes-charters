@@ -9,7 +9,8 @@ export function Header() {
   const location = useLocation();
 
   const navLinks = [
-    { href: "/", label: "Trip Info" },
+    { href: "/", label: "Home" },
+    { href: "/info", label: "Trip Info" },
     { href: "/book", label: "Book Now" },
   ];
 

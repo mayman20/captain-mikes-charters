@@ -93,7 +93,7 @@ export function SlotSelector({ selectedDate, selectedSlot, onSelectSlot }: SlotS
         })}
       </div>
       <p className="mt-4 text-xs text-muted-foreground">
-        Venmo deposit required to hold your date. 20% tip is standard.
+        A 20% deposit or card hold is required to secure your date. 20% tip is standard.
       </p>
     </div>
   );
