@@ -73,3 +73,34 @@ Please fill this out in order. Since the website is not live yet, we will focus 
 - Final Venmo handle or payment instructions for customer deposits.
 - Final owner notification email for booking alerts (`OWNER_EMAIL`).
 - Final admin login credentials for the owner dashboard.
+
+
+have a front image at the top of website, images of both boats and options to 
+
+different rates for half day inshore/offshore
+
+inshore/blockisland(nearshore)/offshore(full day)/overnight(call for info)
+- call for information before booking for overnight (shark/tuna) (12 hours - 30 hours)
+- cancellation 
+
+4 people on big, 3 people on small
+
+if any rods reels parts are broken, required to pay for 50% of equipment
+
+include target fish for different types of charters (inshore,nearshore,etc..)
+
+CANCELLATION POLICY 
+
+20% deposit credit card hold
+
+If you cancel within one week of scheduled date you will loose 40% of trip total. If cancellation is the day prior or day of you will be required to pay the trip amount in full.
+
+BROKEN EQUIPMENT POLICY 
+
+If any rods, reels, gear, or boat parts are broken with client at fault you will be required to pay 50% of value of broken equipment.
+
+ front image
+ rates
+ different packages
+
+ rates in the image (boat and the sky)

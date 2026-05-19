@@ -22,3 +22,10 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Secrets / auth state
+.env
+.env.local
+.env.*.local
+.chromium_profile/
+.chrome_profile/
