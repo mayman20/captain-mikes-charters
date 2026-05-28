@@ -29,3 +29,6 @@ dist-ssr
 .env.*.local
 .chromium_profile/
 .chrome_profile/
+
+# Supabase CLI local state
+supabase/.temp/
