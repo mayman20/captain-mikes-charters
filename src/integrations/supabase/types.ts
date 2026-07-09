@@ -103,6 +103,17 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_booking_availability: {
+        Args: {
+          start_date: string
+          end_date: string
+        }
+        Returns: {
+          date: string
+          slot_type: Database["public"]["Enums"]["slot_type"]
+          status: Database["public"]["Enums"]["booking_status"]
+        }[]
+      }
       is_slot_available: {
         Args: {
           check_date: string

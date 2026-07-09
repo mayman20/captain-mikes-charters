@@ -30,10 +30,15 @@ ON public.bookings
 FOR INSERT
 WITH CHECK (true);
 
--- Allow public to read bookings (for availability checking)
-CREATE POLICY "Anyone can view bookings"
+-- bookings.name / .phone / .email are customer PII. Do NOT expose them to the
+-- anon role. Only authenticated (admin) sessions may SELECT full rows directly;
+-- the public booking form never reads this table, it only INSERTs. Public
+-- availability checks are served by the get_booking_availability() function
+-- below, which is SECURITY DEFINER and returns just date/slot_type/status.
+CREATE POLICY "Authenticated can view bookings"
 ON public.bookings
 FOR SELECT
+TO authenticated
 USING (true);
 
 -- Create a function to check if a slot is available
@@ -74,6 +79,29 @@ BEGIN
   RETURN FALSE;
 END;
 $$;
+
+-- Public availability read, scoped to non-PII columns only.
+-- SECURITY DEFINER lets this run with the table owner's privileges (same as
+-- direct owner access, which is exempt from RLS by default), so it can read
+-- every row's date/slot_type/status while the RETURNS TABLE signature makes it
+-- structurally impossible to leak name/phone/email through this path. This is
+-- what the anon-facing availability calendar calls instead of selecting from
+-- public.bookings directly.
+CREATE OR REPLACE FUNCTION public.get_booking_availability(start_date DATE, end_date DATE)
+RETURNS TABLE (date DATE, slot_type public.slot_type, status public.booking_status)
+LANGUAGE sql
+STABLE
+SECURITY DEFINER
+SET search_path = public
+AS $$
+  SELECT b.date, b.slot_type, b.status
+  FROM public.bookings b
+  WHERE b.date >= start_date
+    AND b.date <= end_date
+    AND b.status = 'confirmed';
+$$;
+
+GRANT EXECUTE ON FUNCTION public.get_booking_availability(DATE, DATE) TO anon, authenticated;
 
 -- Create a trigger to enforce availability before insert
 CREATE OR REPLACE FUNCTION public.check_booking_availability()

@@ -44,12 +44,16 @@ export function useAvailability() {
   return useQuery({
     queryKey: ["availability", format(startDate, "yyyy-MM-dd")],
     queryFn: async () => {
-      const { data: bookingData, error: bookingError } = await supabase
-        .from("bookings")
-        .select("date, slot_type, status")
-        .gte("date", format(startDate, "yyyy-MM-dd"))
-        .lte("date", format(endDate, "yyyy-MM-dd"))
-        .eq("status", "confirmed");
+      // bookings is not directly SELECT-able by anon (it holds customer PII).
+      // Availability is served by a SECURITY DEFINER function that only
+      // returns date/slot_type/status. See the bookings RLS migration.
+      const { data: bookingData, error: bookingError } = await supabase.rpc(
+        "get_booking_availability",
+        {
+          start_date: format(startDate, "yyyy-MM-dd"),
+          end_date: format(endDate, "yyyy-MM-dd"),
+        }
+      );
 
       if (bookingError) throw bookingError;
 
@@ -112,25 +116,26 @@ export function useCreateBooking() {
 
   return useMutation({
     mutationFn: async (input: BookingInput) => {
-      const { data, error } = await supabase
-        .from("bookings")
-        .insert({
-          date: input.date,
-          slot_type: input.slot_type,
-          name: input.name,
-          phone: input.phone,
-          email: input.email,
-          party_size: input.party_size,
-          notes: input.notes || null,
-        })
-        .select()
-        .single();
+      // No .select() here on purpose: anon can INSERT bookings but can no
+      // longer SELECT them back (bookings holds PII and is admin-read-only),
+      // so PostgREST's insert-then-return-row would be blocked by RLS and
+      // throw. The email function only needs what the customer just typed,
+      // which we already have in `input` — no DB round trip required.
+      const { error } = await supabase.from("bookings").insert({
+        date: input.date,
+        slot_type: input.slot_type,
+        name: input.name,
+        phone: input.phone,
+        email: input.email,
+        party_size: input.party_size,
+        notes: input.notes || null,
+      });
 
       if (error) throw error;
 
       try {
         const { error: fnError } = await supabase.functions.invoke("send-booking-email", {
-          body: { booking: data },
+          body: { booking: input },
         });
         if (fnError) {
           console.error("send-booking-email failed", fnError.message);
@@ -139,7 +144,7 @@ export function useCreateBooking() {
         console.error("send-booking-email failed", err);
       }
 
-      return data as Booking;
+      return input;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["availability"] });
