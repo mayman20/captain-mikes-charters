@@ -16,8 +16,8 @@
     --popover: 0 0% 100%;
     --popover-foreground: 210 40% 15%;
 
-    /* Deep ocean blue */
-    --primary: 205 75% 35%;
+    /* Crab blue from the Pushing Limits patch logo */
+    --primary: 201 62% 32%;
     --primary-foreground: 0 0% 100%;
 
     /* Sandy beige accent */
@@ -27,8 +27,8 @@
     --muted: 210 15% 92%;
     --muted-foreground: 210 15% 45%;
 
-    /* Warm sand/coral for CTAs */
-    --accent: 25 85% 55%;
+    /* Brick red from the Pushing Limits patch logo */
+    --accent: 8 64% 45%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 72% 51%;
@@ -36,7 +36,7 @@
 
     --border: 210 20% 88%;
     --input: 210 20% 88%;
-    --ring: 205 75% 35%;
+    --ring: 201 62% 32%;
 
     --radius: 0.5rem;
 
@@ -78,7 +78,7 @@
     --muted: 210 30% 18%;
     --muted-foreground: 210 15% 60%;
 
-    --accent: 25 80% 55%;
+    --accent: 8 66% 52%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 62% 45%;

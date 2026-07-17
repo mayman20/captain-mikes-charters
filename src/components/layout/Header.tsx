@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { Anchor, Menu, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -17,9 +17,13 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 bg-card/95 backdrop-blur-sm border-b">
       <div className="container flex items-center justify-between h-16">
-        <Link to="/" className="flex items-center gap-2">
-          <Anchor className="h-7 w-7 text-primary" />
-          <span className="font-bold text-lg text-foreground">PushingLimits SportFishing</span>
+        <Link to="/" className="flex items-center gap-2.5">
+          <img
+            src="/logo.png"
+            alt="Pushing Limits Sportfishing logo"
+            className="h-10 w-10 rounded-full border border-border object-cover"
+          />
+          <span className="font-bold text-lg text-foreground">Pushing Limits Sportfishing</span>
         </Link>
 
         {/* Desktop Nav */}
