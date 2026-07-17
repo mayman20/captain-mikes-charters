@@ -1,14 +1,15 @@
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { ExternalLink, Phone } from "lucide-react";
-
-const FISHINGBOOKER_EMBED_URL =
-  "https://fishingbooker.com/embeds/book/2169274?_slaid=10729308";
+import { BOOKING_URL, PHONE_DISPLAY, PHONE_HREF, REGULATOR_RATES } from "@/data/charter";
 
 const bookingImages = [
-  { src: "/homepage/nearshore.jpg", alt: "Nearshore charter fishing with Pushing Limits Sportfishing", position: "center 35%" },
-  { src: "/homepage/offshore.jpg", alt: "Offshore tuna fishing with Pushing Limits Sportfishing", position: "center 44%" },
+  { src: "/homepage/catch_stripers.jpg", alt: "Two anglers holding striped bass on a Pushing Limits charter", position: "center 30%" },
+  { src: "/homepage/catch_tuna.jpg", alt: "Two anglers holding tuna on a Pushing Limits offshore charter", position: "center 35%" },
 ];
+
+const rateFor = (fragment: string) =>
+  REGULATOR_RATES.find((rate) => rate.name.includes(fragment))?.price ?? 0;
 
 export default function Booking() {
   return (
@@ -29,23 +30,23 @@ export default function Booking() {
                 date and trip below — the captain confirms departure details by phone.
               </p>
               <div className="flex flex-wrap items-center gap-3 text-sm text-slate-600">
-                <span>Inshore from $600</span>
+                <span>Inshore from ${rateFor("Half-Day Inshore")}</span>
                 <span className="text-slate-300">/</span>
-                <span>Nearshore from $800</span>
+                <span>Nearshore from ${rateFor("Half-Day Nearshore")}</span>
                 <span className="text-slate-300">/</span>
-                <span>Offshore tuna $1,600</span>
+                <span>Offshore tuna ${rateFor("Offshore Tuna").toLocaleString("en-US")}</span>
                 <span className="text-slate-300">/</span>
                 <span>Overnight trips by phone</span>
               </div>
               <div className="flex flex-col gap-3 sm:flex-row">
-                <a href="tel:+14013638189">
+                <a href={PHONE_HREF}>
                   <Button size="lg" className="w-full bg-accent text-accent-foreground hover:bg-accent/90 sm:w-auto">
                     <Phone className="mr-2 h-4 w-4" />
-                    Call (401) 363-8189
+                    Call {PHONE_DISPLAY}
                   </Button>
                 </a>
                 <a
-                  href={FISHINGBOOKER_EMBED_URL}
+                  href={BOOKING_URL}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -84,14 +85,13 @@ export default function Booking() {
           <div className="container max-w-5xl">
             <div className="overflow-hidden rounded-[1.5rem] border border-[#ddd3bd] bg-white shadow-[0_20px_45px_-36px_rgba(15,23,42,0.55)]">
               <iframe
-                src={FISHINGBOOKER_EMBED_URL}
+                src={BOOKING_URL}
                 title="Book a trip with Pushing Limits Sportfishing on FishingBooker"
                 className="block h-[80vh] min-h-[640px] w-full"
               />
             </div>
             <p className="mt-4 text-center text-sm text-slate-600">
-              Trouble with the calendar? Use the new-tab link above or call
-              (401) 363-8189. Overnight tuna and shark trips are booked by phone only.
+              Trouble with the calendar? Use the new-tab link above or call {PHONE_DISPLAY}. Overnight tuna and shark trips are booked by phone only.
             </p>
           </div>
         </section>

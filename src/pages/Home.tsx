@@ -3,44 +3,15 @@ import { Button } from "@/components/ui/button";
 import { Anchor, ArrowRight, Compass, CreditCard, Fish, Phone, Waves, Wrench } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-
-const tripStyles = [
-  {
-    title: "Inshore",
-    image: "/homepage/inshore.jpg",
-    description: "Half to full day sessions targeting seabass, fluke, striped bass.",
-    imagePosition: "center 34%",
-    species: ["Seabass", "Fluke", "Striped Bass"],
-    details: [
-      "Half-day and full-day options depending on the trip plan.",
-      "Great fit for seabass, fluke, and striped bass.",
-    ],
-  },
-  {
-    title: "Nearshore",
-    image: "/homepage/nearshore.jpg",
-    description:
-      "Half to full day bookings 5-8 hours. Targeting striped bass, seabass, fluke, porgy, sharks, bonita, false albacore.",
-    imagePosition: "center 35%",
-    species: ["Striped Bass", "Seabass", "Fluke", "Porgy", "Sharks", "Bonita", "False Albacore"],
-    details: [
-      "Trips run roughly 5 to 8 hours depending on the day and target.",
-      "Block Island and nearshore plans can be tailored around the bite.",
-    ],
-  },
-  {
-    title: "Offshore",
-    image: "/homepage/offshore.jpg",
-    description:
-      "Contact for more info. Full day or overnight charters available. Targeting tuna, sharks.",
-    details: [
-      "Full-day offshore runs plus overnight shark and tuna trips.",
-      "Overnight trips are phone-only and can range from 12 to 30 hours.",
-    ],
-    imagePosition: "center 44%",
-    species: ["Tuna", "Sharks"],
-  },
-];
+import {
+  OVERNIGHT_NOTE,
+  PHONE_DISPLAY,
+  PHONE_HREF,
+  REGULATOR_RATES,
+  SAILFISH_RATES,
+  SQUID_TRIP,
+  TRIP_STYLES,
+} from "@/data/charter";
 
 const stats = [
   {
@@ -77,6 +48,8 @@ const policyHighlights = [
     text: "If rods, reels, gear, or boat parts are broken at client fault, the customer is responsible for 50% of the value.",
   },
 ];
+
+const formatPrice = (price: number) => `$${price.toLocaleString("en-US")}`;
 
 export default function Home() {
   const [scrollY, setScrollY] = useState(0);
@@ -161,14 +134,14 @@ export default function Home() {
                     Book a Charter
                   </Button>
                 </Link>
-                <a href="tel:+14013638189" className="sm:inline-flex">
+                <a href={PHONE_HREF} className="sm:inline-flex">
                   <Button
                     size="lg"
                     variant="outline"
                     className="w-full border-white/30 bg-white/10 text-white backdrop-blur-sm hover:bg-white hover:text-slate-950 sm:w-auto"
                   >
                     <Phone className="mr-2 h-4 w-4" />
-                    (401) 363-8189
+                    {PHONE_DISPLAY}
                   </Button>
                 </a>
               </div>
@@ -200,7 +173,9 @@ export default function Home() {
                 Straightforward pricing.
               </h2>
               <p className="text-sm leading-6 text-slate-600 md:text-base">
-                Rates are easy to scan on mobile and desktop. For offshore and overnight trips, call directly for details and availability.
+                The same rates you'll see at checkout. Live availability for every
+                online trip is on the booking page — offshore overnights are planned
+                by phone.
               </p>
               <Link to="/info" className="inline-flex">
                 <Button variant="outline" className="border-slate-300 bg-white hover:bg-slate-950 hover:text-white">
@@ -210,13 +185,56 @@ export default function Home() {
               </Link>
             </div>
 
-            <div className="overflow-hidden border border-[#ddd3bd] bg-white p-1 shadow-[0_20px_45px_-36px_rgba(15,23,42,0.55)]">
+            <div className="relative overflow-hidden rounded-[1.5rem] border border-[#ddd3bd] shadow-[0_20px_45px_-36px_rgba(15,23,42,0.55)]">
               <img
-                src="/homepage/pricing.png"
-                alt="Pushing Limits Sportfishing pricing"
-                className="h-auto w-full object-cover"
-                loading="lazy"
+                src="/homepage/rates_bg.jpg"
+                alt="The 25 Regulator idling on calm grey water"
+                className="absolute inset-0 h-full w-full object-cover object-[center_78%]"
               />
+              <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(253,246,227,0.96)_0%,rgba(253,246,227,0.92)_52%,rgba(253,246,227,0.45)_74%,rgba(253,246,227,0.12)_92%,transparent_100%)]" />
+              <div className="relative p-6 pb-64 font-serif text-slate-900 md:p-9 md:pb-72">
+                <div className="flex items-baseline justify-between border-b-2 border-slate-800 pb-2">
+                  <span className="text-xl font-bold md:text-2xl">Charter</span>
+                  <span className="text-xl font-bold md:text-2xl">Price</span>
+                </div>
+
+                <div className="mt-4 space-y-1.5">
+                  <div className="flex items-center gap-2">
+                    <p className="font-bold">Boat: 25 Regulator</p>
+                    <span className="rounded-full bg-primary px-2 py-0.5 font-sans text-[10px] font-semibold uppercase tracking-wider text-primary-foreground">
+                      Book online
+                    </span>
+                  </div>
+                  {REGULATOR_RATES.map((rate) => (
+                    <div key={rate.name} className="flex items-baseline justify-between gap-4 text-sm md:text-base">
+                      <span>
+                        {rate.name}
+                        {rate.note && <span className="text-slate-600"> — {rate.note}</span>}
+                      </span>
+                      <span className="font-semibold">{formatPrice(rate.price)}</span>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mt-5 space-y-1.5 border-t border-slate-400/60 pt-4">
+                  <div className="flex items-center gap-2">
+                    <p className="font-bold">Boat: 206 Sailfish</p>
+                    <span className="rounded-full bg-slate-700 px-2 py-0.5 font-sans text-[10px] font-semibold uppercase tracking-wider text-white">
+                      By phone
+                    </span>
+                  </div>
+                  {SAILFISH_RATES.map((rate) => (
+                    <div key={rate.name} className="flex items-baseline justify-between gap-4 text-sm md:text-base">
+                      <span>{rate.name}</span>
+                      <span className="font-semibold">{formatPrice(rate.price)}</span>
+                    </div>
+                  ))}
+                </div>
+
+                <p className="mt-5 rounded-xl bg-[#fdf6e3]/85 px-3 py-2 text-center text-xs font-semibold leading-5 backdrop-blur-[2px] md:text-sm">
+                  {OVERNIGHT_NOTE.replace("call", `call ${PHONE_DISPLAY}`)}
+                </p>
+              </div>
             </div>
           </div>
         </section>
@@ -231,12 +249,13 @@ export default function Home() {
                 Inshore, nearshore, and offshore at a glance.
               </h2>
               <p className="text-sm leading-6 text-slate-600 md:text-base">
-                Pick the trip style that fits the day, the season, and what you want to target.
+                The same trips, techniques, and target species you'll find on the
+                booking calendar.
               </p>
             </div>
 
             <div className="grid gap-6 md:grid-cols-3">
-              {tripStyles.map((trip) => (
+              {TRIP_STYLES.map((trip) => (
                 <article
                   key={trip.title}
                   className="overflow-hidden rounded-[2rem] border border-[#cfe0e5] bg-white shadow-[0_20px_50px_-38px_rgba(15,23,42,0.7)]"
@@ -255,31 +274,72 @@ export default function Home() {
                       {trip.title}
                     </h3>
                     <p className="text-sm leading-6 text-slate-600">{trip.description}</p>
-                    <div className="space-y-2">
-                      {trip.details.map((detail) => (
-                        <p key={detail} className="text-sm leading-6 text-slate-600">
-                          {detail}
-                        </p>
-                      ))}
+                    <div className="space-y-3 border-t border-slate-200 pt-4">
+                      <p className="text-xs font-semibold uppercase tracking-[0.22em] text-primary">
+                        Techniques
+                      </p>
+                      <div className="flex flex-wrap gap-2">
+                        {trip.techniques.map((technique) => (
+                          <span
+                            key={technique}
+                            className="rounded-full border border-[#cfe0e5] bg-[#f5fbfd] px-3 py-1 text-xs font-semibold uppercase tracking-[0.08em] text-slate-700"
+                          >
+                            {technique}
+                          </span>
+                        ))}
+                      </div>
                     </div>
                     <div className="space-y-3 border-t border-slate-200 pt-4">
                       <p className="text-xs font-semibold uppercase tracking-[0.22em] text-primary">
                         Targeted Species
                       </p>
-                      <div className="flex flex-wrap gap-2">
+                      <div className="grid grid-cols-2 gap-2">
                         {trip.species.map((species) => (
-                          <span
-                            key={species}
-                            className="rounded-full border border-[#cfe0e5] bg-[#f5fbfd] px-3 py-1 text-xs font-semibold uppercase tracking-[0.08em] text-slate-700"
+                          <div
+                            key={species.name}
+                            className="flex flex-col items-center gap-1 rounded-xl border border-slate-200 bg-white px-2 py-2"
                           >
-                            {species}
-                          </span>
+                            <img
+                              src={species.image}
+                              alt={species.name}
+                              className="h-10 w-full object-contain"
+                              loading="lazy"
+                            />
+                            <span className="text-center text-[11px] font-semibold leading-tight text-slate-700">
+                              {species.name}
+                            </span>
+                          </div>
                         ))}
                       </div>
                     </div>
                   </div>
                 </article>
               ))}
+            </div>
+
+            <div className="mt-6 flex flex-col items-center gap-5 rounded-[2rem] border border-[#cfe0e5] bg-white p-5 shadow-[0_20px_50px_-38px_rgba(15,23,42,0.7)] sm:flex-row md:p-6">
+              <img
+                src={SQUID_TRIP.species.image}
+                alt={SQUID_TRIP.species.name}
+                className="h-16 w-28 shrink-0 object-contain"
+                loading="lazy"
+              />
+              <div className="flex-1 text-center sm:text-left">
+                <h3 className="text-xl font-black tracking-[-0.02em] text-slate-950">
+                  {SQUID_TRIP.title}
+                </h3>
+                <p className="text-sm leading-6 text-slate-600">
+                  {SQUID_TRIP.season}. {SQUID_TRIP.detail}
+                </p>
+              </div>
+              <div className="flex flex-col items-center gap-2 sm:items-end">
+                <span className="text-2xl font-black text-primary">{formatPrice(SQUID_TRIP.price)}</span>
+                <Link to="/book">
+                  <Button size="sm" variant="outline" className="border-slate-300 bg-white hover:bg-slate-950 hover:text-white">
+                    Check dates
+                  </Button>
+                </Link>
+              </div>
             </div>
           </div>
         </section>
@@ -327,9 +387,9 @@ export default function Home() {
                   Packages at a glance
                 </h3>
                 <div className="space-y-2 text-sm leading-6 text-slate-600">
-                  <p>Inshore and nearshore trips can be booked online.</p>
-                  <p>Offshore full-day trips are available, with overnights handled by phone.</p>
-                  <p>For overnight tuna and shark trips, call directly for information before booking.</p>
+                  <p>Inshore, nearshore, squid, and full-day offshore tuna trips can all be booked online.</p>
+                  <p>Overnight tuna and shark trips are handled by phone.</p>
+                  <p>For overnight trips, call directly for information before booking.</p>
                 </div>
               </div>
             </div>

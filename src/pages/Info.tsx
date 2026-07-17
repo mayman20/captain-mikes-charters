@@ -12,6 +12,18 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import {
+  ADDRESS,
+  AMENITIES,
+  OVERNIGHT_NOTE,
+  PHONE_DISPLAY,
+  PHONE_HREF,
+  REGULATOR_RATES,
+  SAILFISH_RATES,
+  TRIP_INCLUDES,
+} from "@/data/charter";
+
+const formatPrice = (price: number) => `$${price.toLocaleString("en-US")}`;
 
 export default function Info() {
   return (
@@ -33,30 +45,34 @@ export default function Info() {
           </h2>
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="bg-card rounded-lg border p-5">
-              <div className="font-semibold mb-3">Boat: 206 Sailfish</div>
+              <div className="font-semibold mb-3">Boat: 25 Regulator <span className="ml-1 text-xs font-medium uppercase tracking-wider text-primary">book online</span></div>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li className="flex justify-between gap-4"><span>Half-Day Inshore (4 hours)</span><span className="font-bold text-primary">$450</span></li>
-                <li className="flex justify-between gap-4"><span>3/4-Day Inshore (6 hours)</span><span className="font-bold text-primary">$650</span></li>
-                <li className="flex justify-between gap-4"><span>Full-Day Inshore (8 hours)</span><span className="font-bold text-primary">$850</span></li>
+                {REGULATOR_RATES.map((rate) => (
+                  <li key={rate.name} className="flex justify-between gap-4">
+                    <span>{rate.name}{rate.note && <span className="text-xs"> ({rate.note})</span>}</span>
+                    <span className="font-bold text-primary">{formatPrice(rate.price)}</span>
+                  </li>
+                ))}
               </ul>
             </div>
             <div className="bg-card rounded-lg border p-5">
-              <div className="font-semibold mb-3">Boat: 25 Regulator</div>
+              <div className="font-semibold mb-3">Boat: 206 Sailfish <span className="ml-1 text-xs font-medium uppercase tracking-wider text-muted-foreground">by phone</span></div>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li className="flex justify-between gap-4"><span>Half-Day Inshore (4 hours)</span><span className="font-bold text-primary">$600</span></li>
-                <li className="flex justify-between gap-4"><span>Half-Day Nearshore / Block Island (5 hours)</span><span className="font-bold text-primary">$800</span></li>
-                <li className="flex justify-between gap-4"><span>Full-Day Nearshore / Block Island (8 hours)</span><span className="font-bold text-primary">$1,100</span></li>
-                <li className="flex justify-between gap-4"><span>Full-Day Offshore Tuna (11 hours)</span><span className="font-bold text-primary">$1,600</span></li>
+                {SAILFISH_RATES.map((rate) => (
+                  <li key={rate.name} className="flex justify-between gap-4">
+                    <span>{rate.name}</span>
+                    <span className="font-bold text-primary">{formatPrice(rate.price)}</span>
+                  </li>
+                ))}
               </ul>
             </div>
           </div>
           <p className="mt-4 text-sm text-muted-foreground">
-            Live availability and checkout for online-bookable trips are on the booking page,
-            including a seasonal evening squid trip in spring. 20% tip is standard for all charters.
+            Live availability and checkout for online-bookable trips are on the booking page.
+            20% tip is standard for all charters.
           </p>
           <p className="mt-2 text-sm text-muted-foreground">
-            Overnight tuna and shark trips (12–30 hours) are available by phone only at (401) 363-8189.
-            Contact the captain directly for pricing, timing, and availability.
+            {OVERNIGHT_NOTE} <a href={PHONE_HREF} className="font-medium text-primary hover:underline">{PHONE_DISPLAY}</a>
           </p>
         </section>
 
@@ -91,13 +107,7 @@ export default function Info() {
             What's Included
           </h2>
           <ul className="space-y-3">
-            {[
-              "All fishing tackle and gear provided",
-              "Live and artificial bait",
-              "Fishing license coverage",
-              "Water supplied on board",
-              "Captain follow-up with your final departure details",
-            ].map((item) => (
+            {[...TRIP_INCLUDES, "Captain follow-up with your final departure details"].map((item) => (
               <li key={item} className="flex items-start gap-3">
                 <CheckCircle className="h-5 w-5 text-success shrink-0 mt-0.5" />
                 <span>{item}</span>
@@ -162,6 +172,16 @@ export default function Info() {
             <p className="text-sm text-muted-foreground">
               Final boat assignment depends on trip type, group size, and conditions.
             </p>
+            <div className="border-t pt-4">
+              <p className="text-xs font-semibold uppercase tracking-wider text-primary mb-3">On-board equipment</p>
+              <div className="flex flex-wrap gap-2">
+                {AMENITIES.map((amenity) => (
+                  <span key={amenity} className="rounded-full border bg-muted px-3 py-1 text-xs font-medium text-muted-foreground">
+                    {amenity}
+                  </span>
+                ))}
+              </div>
+            </div>
           </div>
         </section>
 
@@ -172,9 +192,17 @@ export default function Info() {
             Meeting Location
           </h2>
           <div className="bg-card rounded-lg border p-5">
-            <p className="font-semibold">Jerusalem, Rhode Island</p>
+            <p className="font-semibold">{ADDRESS}</p>
+            <a
+              href={`https://maps.google.com/?q=${encodeURIComponent(ADDRESS)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-1 inline-block text-sm text-primary hover:underline"
+            >
+              Show on map
+            </a>
             <p className="mt-3 text-sm text-muted-foreground">
-              The captain will contact you by phone with your meeting time, departure time, and exact location after booking.
+              The captain will contact you by phone with your meeting time, departure time, and exact spot after booking.
             </p>
           </div>
         </section>
@@ -233,8 +261,8 @@ export default function Info() {
           <div className="space-y-3">
             <div className="flex items-center gap-3 p-4 bg-card rounded-lg border">
               <Phone className="h-5 w-5 text-primary" />
-              <a href="tel:+14013638189" className="font-semibold hover:underline">
-                (401) 363-8189
+              <a href={PHONE_HREF} className="font-semibold hover:underline">
+                {PHONE_DISPLAY}
               </a>
             </div>
           </div>
