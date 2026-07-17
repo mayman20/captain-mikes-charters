@@ -203,11 +203,11 @@ export default function Home() {
             <div className="relative overflow-hidden rounded-[1.5rem] border border-[#ddd3bd] shadow-[0_20px_45px_-36px_rgba(15,23,42,0.55)]">
               <img
                 src="/homepage/rates_bg.jpg"
-                alt="The 25 Regulator idling on calm grey water off Point Judith"
+                alt="The 206 Sailfish idling on calm grey water off Point Judith"
                 className="h-full max-h-[640px] w-full object-cover object-[center_60%]"
               />
               <span className="absolute bottom-4 left-4 rounded-full border border-white/30 bg-slate-950/60 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-white backdrop-blur-sm">
-                The 25 Regulator
+                The 206 Sailfish
               </span>
             </div>
           </div>
