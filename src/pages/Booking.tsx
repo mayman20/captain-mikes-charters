@@ -62,16 +62,16 @@ export default function Booking() {
               </div>
             </div>
 
-            <div className="grid gap-4 sm:grid-cols-2">
-              {bookingImages.map((image, index) => (
+            <div className="grid items-stretch gap-4 sm:grid-cols-2">
+              {bookingImages.map((image) => (
                 <div
                   key={image.src}
-                  className={`overflow-hidden rounded-[2rem] border border-stone-200 bg-white shadow-sm ${index === 0 ? "sm:mt-10" : ""}`}
+                  className="overflow-hidden rounded-[2rem] border border-stone-200 bg-white shadow-sm"
                 >
                   <img
                     src={image.src}
                     alt={image.alt}
-                    className="h-72 w-full object-cover"
+                    className="h-80 w-full object-cover"
                     style={{ objectPosition: image.position }}
                     loading="lazy"
                   />

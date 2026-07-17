@@ -1,14 +1,12 @@
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
-import { Anchor, ArrowRight, Compass, CreditCard, Fish, Phone, Waves, Wrench } from "lucide-react";
+import { Anchor, ArrowRight, Compass, CreditCard, Fish, MapPin, Phone, Waves, Wrench } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import {
-  OVERNIGHT_NOTE,
   PHONE_DISPLAY,
   PHONE_HREF,
   REGULATOR_RATES,
-  SAILFISH_RATES,
   SQUID_TRIP,
   TRIP_STYLES,
 } from "@/data/charter";
@@ -166,75 +164,51 @@ export default function Home() {
         <section className="bg-[linear-gradient(180deg,#f9efdb_0%,#ffffff_100%)] py-14 md:py-20">
           <div className="container grid gap-10 lg:grid-cols-[0.78fr_1.22fr] lg:items-center">
             <div className="space-y-5">
-              <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary">
+              <p className="text-sm font-semibold uppercase tracking-[0.28em] text-accent">
                 Rates Snapshot
               </p>
               <h2 className="text-3xl font-black uppercase leading-tight tracking-[-0.03em] text-slate-950 md:text-5xl">
                 Straightforward pricing.
               </h2>
               <p className="text-sm leading-6 text-slate-600 md:text-base">
-                The same rates you'll see at checkout. Live availability for every
-                online trip is on the booking page — offshore overnights are planned
-                by phone.
+                No surprises — the rate you see is the rate you pay, and live
+                availability for every online trip is on the booking page.
+                Offshore overnights are planned by phone.
               </p>
-              <Link to="/info" className="inline-flex">
-                <Button variant="outline" className="border-slate-300 bg-white hover:bg-slate-950 hover:text-white">
-                  View Full Trip Info
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </Link>
+              <div className="flex flex-wrap gap-2">
+                {REGULATOR_RATES.filter((rate) => !rate.note).map((rate) => (
+                  <span
+                    key={rate.name}
+                    className="rounded-full border border-[#e3d9c4] bg-[#fdf6e3] px-3 py-1 text-xs font-semibold text-slate-700"
+                  >
+                    {rate.name.replace(/ \(.*\)/, "")} · {formatPrice(rate.price)}
+                  </span>
+                ))}
+              </div>
+              <div className="flex flex-col gap-3 sm:flex-row">
+                <Link to="/book">
+                  <Button className="w-full bg-accent text-accent-foreground hover:bg-accent/90 sm:w-auto">
+                    Book Now
+                  </Button>
+                </Link>
+                <Link to="/info" className="inline-flex">
+                  <Button variant="outline" className="w-full border-slate-300 bg-white hover:bg-slate-950 hover:text-white sm:w-auto">
+                    View Full Trip Info
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </Link>
+              </div>
             </div>
 
             <div className="relative overflow-hidden rounded-[1.5rem] border border-[#ddd3bd] shadow-[0_20px_45px_-36px_rgba(15,23,42,0.55)]">
               <img
                 src="/homepage/rates_bg.jpg"
-                alt="The 25 Regulator idling on calm grey water"
-                className="absolute inset-0 h-full w-full object-cover object-[center_78%]"
+                alt="The 25 Regulator idling on calm grey water off Point Judith"
+                className="h-full max-h-[640px] w-full object-cover object-[center_60%]"
               />
-              <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(253,246,227,0.96)_0%,rgba(253,246,227,0.92)_52%,rgba(253,246,227,0.45)_74%,rgba(253,246,227,0.12)_92%,transparent_100%)]" />
-              <div className="relative p-6 pb-64 font-serif text-slate-900 md:p-9 md:pb-72">
-                <div className="flex items-baseline justify-between border-b-2 border-slate-800 pb-2">
-                  <span className="text-xl font-bold md:text-2xl">Charter</span>
-                  <span className="text-xl font-bold md:text-2xl">Price</span>
-                </div>
-
-                <div className="mt-4 space-y-1.5">
-                  <div className="flex items-center gap-2">
-                    <p className="font-bold">Boat: 25 Regulator</p>
-                    <span className="rounded-full bg-primary px-2 py-0.5 font-sans text-[10px] font-semibold uppercase tracking-wider text-primary-foreground">
-                      Book online
-                    </span>
-                  </div>
-                  {REGULATOR_RATES.map((rate) => (
-                    <div key={rate.name} className="flex items-baseline justify-between gap-4 text-sm md:text-base">
-                      <span>
-                        {rate.name}
-                        {rate.note && <span className="text-slate-600"> — {rate.note}</span>}
-                      </span>
-                      <span className="font-semibold">{formatPrice(rate.price)}</span>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="mt-5 space-y-1.5 border-t border-slate-400/60 pt-4">
-                  <div className="flex items-center gap-2">
-                    <p className="font-bold">Boat: 206 Sailfish</p>
-                    <span className="rounded-full bg-slate-700 px-2 py-0.5 font-sans text-[10px] font-semibold uppercase tracking-wider text-white">
-                      By phone
-                    </span>
-                  </div>
-                  {SAILFISH_RATES.map((rate) => (
-                    <div key={rate.name} className="flex items-baseline justify-between gap-4 text-sm md:text-base">
-                      <span>{rate.name}</span>
-                      <span className="font-semibold">{formatPrice(rate.price)}</span>
-                    </div>
-                  ))}
-                </div>
-
-                <p className="mt-5 rounded-xl bg-[#fdf6e3]/85 px-3 py-2 text-center text-xs font-semibold leading-5 backdrop-blur-[2px] md:text-sm">
-                  {OVERNIGHT_NOTE.replace("call", `call ${PHONE_DISPLAY}`)}
-                </p>
-              </div>
+              <span className="absolute bottom-4 left-4 rounded-full border border-white/30 bg-slate-950/60 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-white backdrop-blur-sm">
+                The 25 Regulator
+              </span>
             </div>
           </div>
         </section>
@@ -242,7 +216,7 @@ export default function Home() {
         <section className="bg-[#ecf4f7] py-14 md:py-20">
           <div className="container">
             <div className="mb-8 max-w-2xl space-y-4 md:mb-12">
-              <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary">
+              <p className="text-sm font-semibold uppercase tracking-[0.28em] text-accent">
                 Types of Fishing
               </p>
               <h2 className="text-3xl font-black tracking-[-0.03em] text-slate-950 md:text-5xl">
@@ -254,13 +228,13 @@ export default function Home() {
               </p>
             </div>
 
-            <div className="grid gap-6 md:grid-cols-3">
+            <div className="grid items-start gap-6 md:grid-cols-3">
               {TRIP_STYLES.map((trip) => (
                 <article
                   key={trip.title}
                   className="overflow-hidden rounded-[2rem] border border-[#cfe0e5] bg-white shadow-[0_20px_50px_-38px_rgba(15,23,42,0.7)]"
                 >
-                  <div className="aspect-[5/4] overflow-hidden">
+                  <div className="aspect-square overflow-hidden">
                     <img
                       src={trip.image}
                       alt={`${trip.title} charter fishing`}
@@ -273,6 +247,10 @@ export default function Home() {
                     <h3 className="text-3xl font-black tracking-[-0.04em] text-slate-950">
                       {trip.title}
                     </h3>
+                    <p className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-[0.08em] text-accent">
+                      <MapPin className="h-3.5 w-3.5 shrink-0" />
+                      {trip.where}
+                    </p>
                     <p className="text-sm leading-6 text-slate-600">{trip.description}</p>
                     <div className="space-y-3 border-t border-slate-200 pt-4">
                       <p className="text-xs font-semibold uppercase tracking-[0.22em] text-primary">
@@ -282,7 +260,7 @@ export default function Home() {
                         {trip.techniques.map((technique) => (
                           <span
                             key={technique}
-                            className="rounded-full border border-[#cfe0e5] bg-[#f5fbfd] px-3 py-1 text-xs font-semibold uppercase tracking-[0.08em] text-slate-700"
+                            className="rounded-full border border-[#e3d9c4] bg-[#fdf6e3] px-3 py-1 text-xs font-semibold uppercase tracking-[0.08em] text-slate-700"
                           >
                             {technique}
                           </span>
@@ -333,7 +311,7 @@ export default function Home() {
                 </p>
               </div>
               <div className="flex flex-col items-center gap-2 sm:items-end">
-                <span className="text-2xl font-black text-primary">{formatPrice(SQUID_TRIP.price)}</span>
+                <span className="text-2xl font-black text-accent">{formatPrice(SQUID_TRIP.price)}</span>
                 <Link to="/book">
                   <Button size="sm" variant="outline" className="border-slate-300 bg-white hover:bg-slate-950 hover:text-white">
                     Check dates
@@ -347,7 +325,7 @@ export default function Home() {
         <section className="bg-[linear-gradient(180deg,#ffffff_0%,#f9efdb_100%)] py-14 md:py-20">
           <div className="container">
             <div className="mb-8 max-w-2xl space-y-4">
-              <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary">
+              <p className="text-sm font-semibold uppercase tracking-[0.28em] text-accent">
                 Booking Details
               </p>
               <h2 className="text-3xl font-black tracking-[-0.03em] text-slate-950 md:text-5xl">

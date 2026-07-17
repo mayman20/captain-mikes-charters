@@ -60,18 +60,20 @@ export const TRIP_STYLES = [
   {
     title: "Inshore",
     image: "/homepage/inshore.jpg",
-    imagePosition: "center 34%",
+    imagePosition: "center 30%",
+    where: "Local waters out of Point Judith",
     description:
-      "Half-day trips targeted at ground fishing for fluke, seabass, and scup, with tautog (blackfish) in the spring, fall, and winter.",
+      "Half-day trips built around ground fishing. Fluke, seabass, and scup through the season, with tautog (blackfish) in the spring, fall, and winter.",
     techniques: ["Bottom Fishing", "Light Tackle", "Fly Fishing", "Jigging", "Spearfishing"],
     species: [SPECIES.blackSeabass, SPECIES.fluke, SPECIES.scup, SPECIES.tautog],
   },
   {
     title: "Nearshore",
     image: "/homepage/nearshore.jpg",
-    imagePosition: "center 35%",
+    imagePosition: "center 70%",
+    where: "Block Island and the nearshore grounds",
     description:
-      "Block Island bass, bluefish, and a mix of bonito and albies — troll or throw light tackle with jigs and live bait. Full days pull a true mixed bag and can be personalized to exactly what you want.",
+      "Striped bass and bluefish at Block Island, with a shot at bonito and albies. Troll, or throw light tackle with jigs and live bait. Full days pull a true mixed bag and can be personalized to exactly what you want.",
     techniques: ["Trolling", "Light Tackle", "Jigging", "Popping", "Spinning", "Fly Fishing"],
     species: [
       SPECIES.stripedBass,
@@ -86,9 +88,10 @@ export const TRIP_STYLES = [
   {
     title: "Offshore",
     image: "/homepage/offshore.jpg",
-    imagePosition: "center 44%",
+    imagePosition: "center 60%",
+    where: "The offshore tuna grounds",
     description:
-      "For pelagic anglers targeting tuna for meat or for game — recreational-size fish or giant bluefin catch and release. Full 11-hour days online, overnights by phone.",
+      "Tuna trips for the meat or for the fight — recreational-size fish, or giant bluefin on catch and release. Full 11-hour days book online; overnight trips run by phone.",
     techniques: ["Trolling", "Jigging", "Popping"],
     species: [SPECIES.bluefinTuna, SPECIES.yellowfinTuna, SPECIES.mahiMahi],
   },
