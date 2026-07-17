@@ -1,7 +1,7 @@
-import MockHome from "./MockHome";
+import Home from "./Home";
 
 const Index = () => {
-  return <MockHome />;
+  return <Home />;
 };
 
 export default Index;

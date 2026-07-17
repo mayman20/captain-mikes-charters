@@ -63,8 +63,8 @@ const stats = [
 const policyHighlights = [
   {
     icon: CreditCard,
-    title: "20% deposit / card hold",
-    text: "A 20% deposit or card hold is required to secure the date on the calendar.",
+    title: "Simple, secure booking",
+    text: "Online trips are paid through FishingBooker's secure checkout. Phone bookings are secured with a 20% deposit or card hold.",
   },
   {
     icon: Anchor,
@@ -78,7 +78,7 @@ const policyHighlights = [
   },
 ];
 
-export default function MockHome() {
+export default function Home() {
   const [scrollY, setScrollY] = useState(0);
   const [allowMotion, setAllowMotion] = useState(false);
 
@@ -122,7 +122,7 @@ export default function MockHome() {
 
   return (
     <Layout>
-      <div className="bg-[#f7f1e8] text-slate-950">
+      <div className="bg-[#f9efdb] text-slate-950">
         <section className="relative isolate overflow-hidden">
           <div
             className="absolute inset-0 scale-110"
@@ -190,7 +190,7 @@ export default function MockHome() {
           </div>
         </section>
 
-        <section className="bg-[linear-gradient(180deg,#f7f1e8_0%,#ffffff_100%)] py-14 md:py-20">
+        <section className="bg-[linear-gradient(180deg,#f9efdb_0%,#ffffff_100%)] py-14 md:py-20">
           <div className="container grid gap-10 lg:grid-cols-[0.78fr_1.22fr] lg:items-center">
             <div className="space-y-5">
               <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary">
@@ -210,7 +210,7 @@ export default function MockHome() {
               </Link>
             </div>
 
-            <div className="overflow-hidden border border-[#d7d0c5] bg-white p-1 shadow-[0_20px_45px_-36px_rgba(15,23,42,0.55)]">
+            <div className="overflow-hidden border border-[#ddd3bd] bg-white p-1 shadow-[0_20px_45px_-36px_rgba(15,23,42,0.55)]">
               <img
                 src="/homepage/pricing.png"
                 alt="Pushing Limits Sportfishing pricing"
@@ -284,7 +284,7 @@ export default function MockHome() {
           </div>
         </section>
 
-        <section className="bg-[linear-gradient(180deg,#ffffff_0%,#f7f1e8_100%)] py-14 md:py-20">
+        <section className="bg-[linear-gradient(180deg,#ffffff_0%,#f9efdb_100%)] py-14 md:py-20">
           <div className="container">
             <div className="mb-8 max-w-2xl space-y-4">
               <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary">
@@ -294,7 +294,7 @@ export default function MockHome() {
                 Important details up front.
               </h2>
               <p className="text-sm leading-6 text-slate-600 md:text-base">
-                The homepage should make the basics easy to understand before someone clicks into the full booking flow.
+                Deposit, boat capacity, and cancellation basics — know them before you book.
               </p>
             </div>
 
@@ -316,8 +316,8 @@ export default function MockHome() {
                   Cancellation policy
                 </h3>
                 <div className="space-y-2 text-sm leading-6 text-slate-600">
-                  <p>If you cancel within one week of the scheduled trip date, 40% of the trip total is owed.</p>
-                  <p>If you cancel the day prior or the day of the trip, the full trip amount is owed.</p>
+                  <p>Online bookings cancel free up to 3 days before the trip; after that, or for no-shows, the full amount paid is forfeited.</p>
+                  <p>Phone-booked trips confirm cancellation terms with the captain directly.</p>
                   <p>Weather decisions are at the captain’s discretion, and weather-related trips can be rescheduled.</p>
                 </div>
               </div>
