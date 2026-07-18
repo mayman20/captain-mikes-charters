@@ -32,3 +32,6 @@ dist-ssr
 
 # Supabase CLI local state
 supabase/.temp/
+
+# wrangler local state
+.wrangler/
