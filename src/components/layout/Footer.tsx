@@ -1,5 +1,6 @@
 import { Phone } from "lucide-react";
 import { Link } from "react-router-dom";
+import { INSTAGRAM_URL, PHONE_DISPLAY, PHONE_HREF } from "@/data/charter";
 
 export function Footer() {
   return (
@@ -16,9 +17,9 @@ export function Footer() {
           </div>
 
           <div className="flex flex-col gap-2 text-sm text-primary-foreground/90">
-            <a href="tel:+14013638189" className="flex items-center gap-2 hover:text-primary-foreground">
+            <a href={PHONE_HREF} className="flex items-center gap-2 hover:text-primary-foreground">
               <Phone className="h-4 w-4" />
-              (401) 363-8189
+              {PHONE_DISPLAY}
             </a>
           </div>
 
@@ -26,7 +27,7 @@ export function Footer() {
             <Link to="/book" className="hover:underline">Book</Link>
             <Link to="/info" className="hover:underline">Info</Link>
             <a
-              href="https://www.instagram.com/pushinglimitssportfishin/"
+              href={INSTAGRAM_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="hover:underline"
