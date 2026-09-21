@@ -2,6 +2,10 @@
 
 Website for [Pushing Limits Sportfishing](https://www.instagram.com/pushinglimitssportfishin/),
 a charter fishing business run by Capt. Mike Aiello out of Point Judith, RI.
+
+**Live site:** [pushinglimitssportfishing.com](https://pushinglimitssportfishing.com/)
+**Retired v1 platform (Supabase, full booking backend):** [`booking-platform-v1` tag](https://github.com/mayman20/captain-mikes-charters/tree/booking-platform-v1)
+
 Trip styles, rates, policies, and what-to-bring details, with booking handled
 through FishingBooker's embedded checkout (live availability, deposits, and
 payment all run through FishingBooker — the site has no backend to maintain).
@@ -23,7 +27,7 @@ The business later consolidated its calendar and payments on FishingBooker, so
 the self-hosted booking system was retired in favor of the embed and the site
 became fully static. The complete v1 platform — schema, RLS policies, triggers,
 edge function, admin dashboard — is preserved at the
-[`booking-platform-v1`](../../tree/booking-platform-v1) tag.
+[`booking-platform-v1`](https://github.com/mayman20/captain-mikes-charters/tree/booking-platform-v1) tag.
 
 ## Tech stack
 
