@@ -58,6 +58,11 @@ npm run dev
 Static build with `npm run build` — deployable to any static host
 (`public/_redirects` covers SPA routing on Netlify/Cloudflare Pages).
 
+## AI assistance
+
+Development was AI-assisted, using Claude (Anthropic) as a coding aid. At least
+one historical commit carries a Claude co-author trailer.
+
 ## License
 
 MIT — see [LICENSE](LICENSE).
