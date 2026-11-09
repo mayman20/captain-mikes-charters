@@ -1,5 +1,7 @@
 # Pushing Limits Sportfishing
 
+[![CI](https://github.com/mayman20/captain-mikes-charters/actions/workflows/ci.yml/badge.svg)](https://github.com/mayman20/captain-mikes-charters/actions/workflows/ci.yml)
+
 Website for [Pushing Limits Sportfishing](https://www.instagram.com/pushinglimitssportfishin/),
 a charter fishing business run by Capt. Mike Aiello out of Point Judith, RI.
 
